@@ -1,7 +1,6 @@
 // js/guide-loader.js
 class GuideLoader {
     constructor() {
-        this.guides = [];
         this.colors = {
             primary: '#3b82f6',
             success: '#22c55e',
@@ -9,21 +8,20 @@ class GuideLoader {
             secondary: '#6366f1',
             danger: '#ef4444'
         };
-        // GitHub Pagesのベースパスを取得
         this.basePath = this.getBasePath();
     }
 
-    // GitHub PagesのベースパスをURLから取得
     getBasePath() {
         const path = window.location.pathname;
-        // リポジトリ名をパスから抽出（例：/repo-name/ or /）
         const match = path.match(/^\/[^/]+\//);
         return match ? match[0] : '/';
     }
 
     async init() {
         try {
-            await this.loadGuides();
+            // インデックスファイルから利用可能なガイドの一覧を取得
+            const guides = await this.scanGuides();
+            await this.loadGuides(guides);
         } catch (error) {
             console.error('初期化エラー:', error);
             document.getElementById('loading').innerHTML = `
@@ -35,31 +33,46 @@ class GuideLoader {
         }
     }
 
-    async loadGuides() {
+    async scanGuides() {
+        try {
+            const indexResponse = await fetch(`${this.basePath}guides/index.json`);
+            if (!indexResponse.ok) {
+                throw new Error('インデックスファイルの読み込みに失敗しました');
+            }
+            const index = await indexResponse.json();
+            return index.files;
+        } catch (error) {
+            console.error('インデックススキャンエラー:', error);
+            throw error;
+        }
+    }
+
+    async loadGuides(guides) {
         const grid = document.getElementById('guides-grid');
         const loading = document.getElementById('loading');
 
-        for (const guide of this.guides) {
+        if (guides.length === 0) {
+            loading.textContent = 'ガイドが見つかりませんでした。';
+            return;
+        }
+
+        for (const guide of guides) {
             try {
-                // HTMLファイルのパスを構築
-                const guidePath = `${this.basePath}guides/${guide.path}`;
+                const guidePath = `${this.basePath}guides/${guide}`;
                 console.log('Loading guide from:', guidePath);
 
-                // HTMLファイルを取得
                 const response = await fetch(guidePath);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const html = await response.text();
                 
-                // ガイド情報を抽出してカードを作成
                 const guideInfo = this.extractGuideInfo(html);
-                const card = this.createGuideCard(guideInfo, guide.path);
+                const card = this.createGuideCard(guideInfo, guide);
                 grid.appendChild(card);
             } catch (error) {
-                console.error(`${guide.path}の読み込みエラー:`, error);
-                // エラーカードを表示
-                const errorCard = this.createErrorCard(guide.path, error);
+                console.error(`${guide}の読み込みエラー:`, error);
+                const errorCard = this.createErrorCard(guide, error);
                 grid.appendChild(errorCard);
             }
         }
@@ -67,7 +80,93 @@ class GuideLoader {
         loading.style.display = 'none';
     }
 
-    // エラーカードの作成
+    extractGuideInfo(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // より柔軟な情報抽出
+        const title = this.findContent(doc, [
+            '.header h1',
+            'h1',
+            'title',
+            '.container h1'
+        ]) || 'Untitled Guide';
+
+        const description = this.findContent(doc, [
+            '.header p',
+            '.description',
+            'meta[name="description"]',
+            'h2',
+            'p'
+        ]) || 'No description available';
+
+        // タグの抽出を試みる
+        let tags = this.extractTags(doc);
+        
+        return { title, description, tags };
+    }
+
+    findContent(doc, selectors) {
+        for (const selector of selectors) {
+            const element = doc.querySelector(selector);
+            if (element) {
+                return element.content || element.textContent;
+            }
+        }
+        return null;
+    }
+
+    extractTags(doc) {
+        // 様々なタグ形式に対応
+        const tagElements = [
+            ...doc.querySelectorAll('.tag'),
+            ...doc.querySelectorAll('[data-tag]'),
+            ...doc.querySelectorAll('.badge'),
+            ...doc.querySelectorAll('.label')
+        ];
+
+        if (tagElements.length === 0) {
+            // タグが見つからない場合は内容から推測
+            return this.generateTagsFromContent(doc);
+        }
+
+        return tagElements.slice(0, 3).map(tag => ({
+            text: tag.textContent.trim(),
+            color: this.getTagColor(tag.className)
+        }));
+    }
+
+    generateTagsFromContent(doc) {
+        const tags = [];
+        // h1, h2からキーワードを抽出
+        const headers = doc.querySelectorAll('h1, h2');
+        const commonKeywords = {
+            'python': 'primary',
+            'guide': 'info',
+            'tutorial': 'success',
+            'reference': 'warning',
+            'example': 'secondary'
+        };
+
+        for (const header of headers) {
+            const text = header.textContent.toLowerCase();
+            for (const [keyword, color] of Object.entries(commonKeywords)) {
+                if (text.includes(keyword)) {
+                    tags.push({ text: keyword.charAt(0).toUpperCase() + keyword.slice(1), color });
+                    break;
+                }
+            }
+            if (tags.length >= 2) break;
+        }
+
+        // 最低1つのタグを保証
+        if (tags.length === 0) {
+            tags.push({ text: 'Guide', color: 'primary' });
+        }
+
+        return tags;
+    }
+
     createErrorCard(path, error) {
         const card = document.createElement('div');
         card.className = 'card';
@@ -77,48 +176,6 @@ class GuideLoader {
             <p style="font-size: 0.8em; color: #666;">エラー詳細: ${error.message}</p>
         `;
         return card;
-    }
-
-    extractGuideInfo(html) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        // ヘッダー情報を抽出（より柔軟な抽出方法）
-        const title = 
-            doc.querySelector('.header h1')?.textContent || 
-            doc.querySelector('h1')?.textContent || 
-            'No Title';
-        
-        const description = 
-            doc.querySelector('.header p')?.textContent || 
-            doc.querySelector('h2')?.textContent || 
-            'No Description';
-        
-        // タグを抽出（存在しない場合はデフォルトタグを使用）
-        let tags = Array.from(doc.querySelectorAll('.tag'))
-            .map(tag => ({
-                text: tag.textContent,
-                color: this.getTagColor(tag.className)
-            }))
-            .slice(0, 3);
-
-        // タグが見つからない場合はデフォルトタグを設定
-        if (tags.length === 0) {
-            tags = [{
-                text: 'ガイド',
-                color: 'primary'
-            }];
-        }
-        
-        return { title, description, tags };
-    }
-
-    getTagColor(className) {
-        const colorClasses = ['primary', 'success', 'warning', 'secondary', 'danger'];
-        for (const color of colorClasses) {
-            if (className.includes(color)) return color;
-        }
-        return 'primary';
     }
 
     createGuideCard(info, path) {
@@ -141,7 +198,6 @@ class GuideLoader {
     }
 }
 
-// 初期化
 document.addEventListener('DOMContentLoaded', () => {
     const loader = new GuideLoader();
     loader.init();
