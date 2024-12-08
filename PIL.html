@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: #3b82f6;
+    color: white;
+    font-size: 0.875rem;
+    margin: 0.3rem;
+  }
+  .tag-group {
+    margin: 1rem 0;
+  }
+  .description {
+    color: #475569;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+  .method {
+    color: #38bdf8;
+  }
+  .string {
+    color: #a5d6ff;
+  }
+  .comment {
+    color: #6b7280;
+  }
+  .operator {
+    color: #ff79c6;
+  }
+  .success {
+    background: #22c55e;
+  }
+  .warning {
+    background: #eab308;
+  }
+  .info {
+    background: #0ea5e9;
+  }
+  .danger {
+    background: #ef4444;
+  }
+  .primary {
+    background: #6366f1;
+  }
+  .keyword {
+    color: #ff79c6;
+  }
+  .number {
+    color: #bd93f9;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🖼 PIL Modern Guide</h1>
+      <p>Pythonの画像処理ライブラリ</p>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <h2>📍 基本操作</h2>
+        <p class="description">画像の読み込み、保存、表示などの基本的な操作を行います。</p>
+        <div class="code"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image
+
+<span class="comment"># 画像を開く</span>
+img = Image<span class="operator">.</span><span class="method">open</span>(<span class="string">'image.jpg'</span>)
+
+<span class="comment"># 基本情報の取得</span>
+size = img<span class="operator">.</span><span class="method">size</span>            <span class="comment"># (width, height)</span>
+mode = img<span class="operator">.</span><span class="method">mode</span>            <span class="comment"># 'RGB', 'RGBA', 'L' など</span>
+format = img<span class="operator">.</span><span class="method">format</span>        <span class="comment"># 'JPEG', 'PNG' など</span>
+
+<span class="comment"># 画像の保存</span>
+img<span class="operator">.</span><span class="method">save</span>(<span class="string">'output.png'</span>, optimize=<span class="keyword">True</span>)
+
+<span class="comment"># 画像の表示</span>
+img<span class="operator">.</span><span class="method">show</span>()</div>
+        <div class="tag-group">
+          <span class="tag info">open: 画像読み込み</span>
+          <span class="tag success">save: 画像保存</span>
+          <span class="tag">size: サイズ取得</span>
+          <span class="tag">mode: カラーモード</span>
+          <span class="tag primary">format: 画像形式</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔄 画像変換</h2>
+        <p class="description">画像のサイズ変更、回転、切り抜きなどの変換操作を行います。</p>
+        <div class="code"><span class="comment"># サイズ変更（アスペクト比維持）</span>
+img<span class="operator">.</span><span class="method">thumbnail</span>((<span class="number">800</span>, <span class="number">600</span>))
+
+<span class="comment"># 指定サイズにリサイズ</span>
+resized = img<span class="operator">.</span><span class="method">resize</span>((<span class="number">1024</span>, <span class="number">768</span>))
+
+<span class="comment"># 画像の回転</span>
+rotated = img<span class="operator">.</span><span class="method">rotate</span>(<span class="number">90</span>, expand=<span class="keyword">True</span>)
+
+<span class="comment"># 画像の切り抜き</span>
+cropped = img<span class="operator">.</span><span class="method">crop</span>((left, top, right, bottom))
+
+<span class="comment"># 画像の変形</span>
+from PIL <span class="keyword">import</span> transforms
+transformed = img<span class="operator">.</span><span class="method">transform</span>(size, transform.AFFINE, data)</div>
+        <div class="tag-group">
+          <span class="tag success">thumbnail: サムネイル作成</span>
+          <span class="tag info">resize: リサイズ</span>
+          <span class="tag warning">rotate: 回転</span>
+          <span class="tag warning">crop: 切り抜き</span>
+          <span class="tag danger">transform: 変形</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎨 画像処理</h2>
+        <p class="description">フィルター効果、カラー操作、画像合成などの高度な処理を行います。</p>
+        <div class="code"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageFilter, ImageEnhance
+
+<span class="comment"># フィルター適用</span>
+blurred = img<span class="operator">.</span><span class="method">filter</span>(ImageFilter.BLUR)
+sharpened = img<span class="operator">.</span><span class="method">filter</span>(ImageFilter.SHARPEN)
+edges = img<span class="operator">.</span><span class="method">filter</span>(ImageFilter.FIND_EDGES)
+
+<span class="comment"># 画像の強調</span>
+enhancer = ImageEnhance<span class="operator">.</span>Contrast(img)
+enhanced = enhancer<span class="operator">.</span><span class="method">enhance</span>(<span class="number">1.5</span>)
+
+<span class="comment"># カラーモード変換</span>
+grayscale = img<span class="operator">.</span><span class="method">convert</span>(<span class="string">'L'</span>)      <span class="comment"># グレースケール</span>
+rgba = img<span class="operator">.</span><span class="method">convert</span>(<span class="string">'RGBA'</span>)    <span class="comment"># アルファチャンネル付き</span></div>
+        <div class="tag-group">
+          <span class="tag info">filter: フィルター適用</span>
+          <span class="tag warning">enhance: 画像強調</span>
+          <span class="tag success">convert: モード変換</span>
+          <span class="tag primary">blend: 画像合成</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🛠 実践的な処理</h2>
+        <p class="description">一般的なユースケースに対応する実践的な画像処理の例です。</p>
+        <div class="code"><span class="comment"># 透かし画像の追加</span>
+<span class="keyword">def</span> <span class="method">add_watermark</span>(image, watermark):
+    rgba = image<span class="operator">.</span><span class="method">convert</span>(<span class="string">'RGBA'</span>)
+    watermark = watermark<span class="operator">.</span><span class="method">resize</span>((
+        rgba<span class="operator">.</span>size[<span class="number">0</span>] // <span class="number">4</span>,
+        rgba<span class="operator">.</span>size[<span class="number">1</span>] // <span class="number">4</span>
+    ))
+    pos = (
+        rgba<span class="operator">.</span>size[<span class="number">0</span>] - watermark<span class="operator">.</span>size[<span class="number">0</span>] - <span class="number">10</span>,
+        rgba<span class="operator">.</span>size[<span class="number">1</span>] - watermark<span class="operator">.</span>size[<span class="number">1</span>] - <span class="number">10</span>
+    )
+    rgba<span class="operator">.</span><span class="method">paste</span>(watermark, pos, watermark)
+    <span class="keyword">return</span> rgba
+
+<span class="comment"># 画像の最適化</span>
+<span class="keyword">def</span> <span class="method">optimize_image</span>(image, quality=<span class="number">85</span>):
+    output = BytesIO()
+    image<span class="operator">.</span><span class="method">save</span>(
+        output,
+        format=<span class="string">'JPEG'</span>,
+        optimize=<span class="keyword">True</span>,
+        quality=quality
+    )
+    <span class="keyword">return</span> Image<span class="operator">.</span><span class="method">open</span>(output)</div>
+        <div class="tag-group">
+          <span class="tag success">最適化</span>
+          <span class="tag warning">透かし追加</span>
+          <span class="tag info">バッチ処理</span>
+          <span class="tag danger">高度な合成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

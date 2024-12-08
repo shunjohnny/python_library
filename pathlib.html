@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: #3b82f6;
+    color: white;
+    font-size: 0.875rem;
+    margin: 0.3rem;
+  }
+  .tag-group {
+    margin: 1rem 0;
+  }
+  .description {
+    color: #475569;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+  .method {
+    color: #38bdf8;
+  }
+  .string {
+    color: #a5d6ff;
+  }
+  .comment {
+    color: #6b7280;
+  }
+  .operator {
+    color: #ff79c6;
+  }
+  .success {
+    background: #22c55e;
+  }
+  .warning {
+    background: #eab308;
+  }
+  .info {
+    background: #0ea5e9;
+  }
+  .danger {
+    background: #ef4444;
+  }
+  .primary {
+    background: #6366f1;
+  }
+  .keyword {
+    color: #ff79c6;
+  }
+  .number {
+    color: #bd93f9;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🗂 Pathlib Modern Guide</h1>
+      <p>Pythonのモダンなファイルパス操作ライブラリ</p>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <h2>📍 パス操作の基本</h2>
+        <p class="description">パスの作成と基本的な情報取得。クロスプラットフォームで安全なパス操作が可能です。</p>
+        <div class="code"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+<span class="comment"># パスの作成</span>
+path = Path(<span class="string">'docs/reports/monthly/report.txt'</span>)
+
+<span class="comment"># 基本的な情報取得</span>
+path<span class="operator">.</span><span class="method">parent</span>          <span class="comment"># docs/reports/monthly</span>
+path<span class="operator">.</span><span class="method">parents</span>[<span class="number">0</span>]      <span class="comment"># monthly</span>
+path<span class="operator">.</span><span class="method">parents</span>[<span class="number">1</span>]      <span class="comment"># reports</span>
+path<span class="operator">.</span><span class="method">name</span>            <span class="comment"># report.txt</span>
+path<span class="operator">.</span><span class="method">suffix</span>          <span class="comment"># .txt</span>
+path<span class="operator">.</span><span class="method">stem</span>            <span class="comment"># report</span>
+path<span class="operator">.</span><span class="method">parts</span>           <span class="comment"># ('docs', 'reports', 'monthly', 'report.txt')</span></div>
+        <div class="tag-group">
+          <span class="tag info">parent: 直近の親ディレクトリ</span>
+          <span class="tag info">parents: 親ディレクトリのリスト</span>
+          <span class="tag">name: ファイル名</span>
+          <span class="tag">suffix: 拡張子</span>
+          <span class="tag">stem: 拡張子なしファイル名</span>
+          <span class="tag primary">parts: パスの構成要素</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>💫 ファイル操作とチェック</h2>
+        <p class="description">ファイルの読み書きと存在確認。テキストとバイナリ両方のモードに対応しています。</p>
+        <div class="code"><span class="comment"># ファイルの存在確認と種類チェック</span>
+path<span class="operator">.</span><span class="method">exists</span>()         <span class="comment"># ファイルが存在するか</span>
+path<span class="operator">.</span><span class="method">is_file</span>()        <span class="comment"># ファイルであるか</span>
+path<span class="operator">.</span><span class="method">is_dir</span>()         <span class="comment"># ディレクトリであるか</span>
+path<span class="operator">.</span><span class="method">is_symlink</span>()     <span class="comment"># シンボリックリンクか</span>
+
+<span class="comment"># テキストファイル操作</span>
+path<span class="operator">.</span><span class="method">write_text</span>(<span class="string">'Hello, Pathlib!'</span>, encoding=<span class="string">'utf-8'</span>)
+content = path<span class="operator">.</span><span class="method">read_text</span>(encoding=<span class="string">'utf-8'</span>)
+
+<span class="comment"># バイナリファイル操作</span>
+path<span class="operator">.</span><span class="method">write_bytes</span>(binary_data)
+data = path<span class="operator">.</span><span class="method">read_bytes</span>()
+
+<span class="comment"># ファイル情報</span>
+stats = path<span class="operator">.</span><span class="method">stat</span>()
+size = path<span class="operator">.</span><span class="method">stat</span>()<span class="operator">.</span>st_size  <span class="comment"># ファイルサイズ</span></div>
+        <div class="tag-group">
+          <span class="tag success">exists: 存在確認</span>
+          <span class="tag info">is_file: ファイル判定</span>
+          <span class="tag info">is_dir: ディレクトリ判定</span>
+          <span class="tag warning">stat: ファイル情報</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📁 ディレクトリ操作</h2>
+        <p class="description">ディレクトリの作成、削除、内容の列挙などの高度な操作が可能です。</p>
+        <div class="code"><span class="comment"># ディレクトリ作成</span>
+path<span class="operator">.</span><span class="method">mkdir</span>(
+    parents=<span class="keyword">True</span>,          <span class="comment"># 親ディレクトリも作成</span>
+    exist_ok=<span class="keyword">True</span>          <span class="comment"># 既存でもエラーにしない</span>
+)
+
+<span class="comment"># ディレクトリ内容の列挙</span>
+<span class="keyword">for</span> item <span class="keyword">in</span> path<span class="operator">.</span><span class="method">iterdir</span>():
+    <span class="keyword">print</span>(item)           <span class="comment"># すべてのファイルとディレクトリ</span>
+
+<span class="comment"># パターンマッチング</span>
+python_files = path<span class="operator">.</span><span class="method">glob</span>(<span class="string">'*.py'</span>)        <span class="comment"># 直下のPythonファイル</span>
+all_files = path<span class="operator">.</span><span class="method">rglob</span>(<span class="string">'*.*'</span>)         <span class="comment"># 再帰的にすべてのファイル</span>
+docs = path<span class="operator">.</span><span class="method">glob</span>(<span class="string">'**/*.txt'</span>)      <span class="comment"># すべてのテキストファイル</span>
+
+<span class="comment"># パス変更</span>
+new_path = path<span class="operator">.</span><span class="method">rename</span>(path<span class="operator">.</span><span class="method">with_name</span>(<span class="string">'new_name.txt'</span>))
+moved_path = path<span class="operator">.</span><span class="method">replace</span>(other_path)      <span class="comment"># 既存ファイルも上書き</span></div>
+        <div class="tag-group">
+          <span class="tag success">mkdir: ディレクトリ作成</span>
+          <span class="tag info">iterdir: コンテンツ列挙</span>
+          <span class="tag warning">glob: パターンマッチ</span>
+          <span class="tag danger">rename: 名前変更</span>
+          <span class="tag danger">replace: 移動/上書き</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔧 パス操作ユーティリティ</h2>
+        <p class="description">パスの変更、結合、解決などの便利な操作が提供されています。</p>
+        <div class="code"><span class="comment"># パスの結合</span>
+new_path = Path(<span class="string">'docs'</span>) <span class="operator">/</span> <span class="string">'reports'</span> <span class="operator">/</span> <span class="string">'monthly'</span>
+
+<span class="comment"># ホームディレクトリからの相対パス</span>
+home = Path<span class="operator">.</span><span class="method">home</span>() <span class="operator">/</span> <span class="string">'documents'</span>
+
+<span class="comment"># カレントディレクトリ操作</span>
+current = Path<span class="operator">.</span><span class="method">cwd</span>()
+relative = path<span class="operator">.</span><span class="method">relative_to</span>(current)
+
+<span class="comment"># パス文字列の変更</span>
+modified = path<span class="operator">.</span><span class="method">with_suffix</span>(<span class="string">'.md'</span>)    <span class="comment"># 拡張子変更</span>
+renamed = path<span class="operator">.</span><span class="method">with_name</span>(<span class="string">'other.txt'</span>) <span class="comment"># ファイル名変更</span>
+absolute = path<span class="operator">.</span><span class="method">absolute</span>()           <span class="comment"># 絶対パスを取得</span>
+resolved = path<span class="operator">.</span><span class="method">resolve</span>()           <span class="comment"># シンボリックリンクを解決</span></div>
+        <div class="tag-group">
+          <span class="tag primary">home: ホームディレクトリ</span>
+          <span class="tag primary">cwd: カレントディレクトリ</span>
+          <span class="tag info">with_suffix: 拡張子変更</span>
+          <span class="tag info">with_name: 名前変更</span>
+          <span class="tag warning">absolute: 絶対パス取得</span>
+          <span class="tag warning">resolve: パス解決</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
