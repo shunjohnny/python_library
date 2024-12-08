@@ -2,15 +2,184 @@ import os
 from bs4 import BeautifulSoup
 import glob
 from datetime import datetime
-import re
+import shutil
+
+def generate_sidebar_html(files_info):
+    """
+    トグル可能なサイドバーとボタンのHTMLを生成する
+    """
+    sidebar_items = '\n'.join(
+        f'<a href="{info["path"]}" class="sidebar-item">{info["title"]}</a>'
+        for info in files_info
+    )
+    
+    return f'''
+    <button id="sidebarToggle" class="sidebar-toggle">
+        <span>📑</span>
+    </button>
+    <div id="sidebar" class="sidebar">
+        <nav class="sidebar-content">
+            {sidebar_items}
+        </nav>
+    </div>
+    <script>
+        document.getElementById("sidebarToggle").addEventListener("click", function() {{
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+            this.classList.toggle("active");
+        }});
+    </script>
+    '''
+
+def modify_html_content(html_content, sidebar_content):
+    """
+    HTMLコンテンツにトグル可能なサイドバーを追加する
+    """
+    styles = '''
+    <style>
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        background: #f8fafc;
+        padding: 2rem;
+    }
+    .container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+    .sidebar-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle.active {
+        background: #f1f5f9;
+        transform: translateX(-250px);
+    }
+    .sidebar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background: #f1f5f9;
+        border-left: 1px solid #e2e8f0;
+        padding: 1rem;
+        padding-top: 4rem;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .sidebar-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    .sidebar-item:hover {
+        background: white;
+        color: #1d4ed8;
+        transform: translateX(4px);
+    }
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        height: 2.5rem;
+        padding: 0 1rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #475569;
+        text-decoration: none;
+    }
+    .back-button:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        color: #1d4ed8;
+    }
+    .back-button span {
+        margin-right: 0.5rem;
+    }
+    </style>
+    '''
+    
+    back_button = '''
+    <a href="/index.html" class="back-button">
+        <span>←</span> インデックス
+    </a>
+    '''
+    
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # スタイルを追加
+    if soup.head is None:
+        soup.html.insert(0, BeautifulSoup('<head></head>', 'html.parser'))
+    if soup.head.find('style'):
+        soup.head.style.append(styles)
+    else:
+        soup.head.append(BeautifulSoup(f'<style>{styles}</style>', 'html.parser'))
+    
+    # サイドバーとトグルボタンを追加
+    container_div = soup.find('div', class_='container')
+    if container_div:
+        # 戻るボタンを追加
+        container_div.append(BeautifulSoup(back_button, 'html.parser'))
+        # サイドバーを追加
+        container_div.append(BeautifulSoup(sidebar_content, 'html.parser'))
+    
+    return str(soup)
 
 def extract_html_info(file_path):
     """
     HTMLファイルから詳細な情報を抽出する
     """
     with open(file_path, 'r', encoding='utf-8') as file:
-        content = file.read()
-        soup = BeautifulSoup(content, 'html.parser')
+        soup = BeautifulSoup(file.read(), 'html.parser')
         
         # 基本情報の抽出
         title = soup.title.string if soup.title else os.path.basename(file_path)
@@ -32,231 +201,260 @@ def extract_html_info(file_path):
             if tag_text and tag_text not in tags:
                 tags.append(tag_text)
         
-        # ファイル情報
-        file_size = os.path.getsize(file_path) / 1024  # KB
-        mod_time = os.path.getmtime(file_path)
+        # Modern Guideの文言を削除
+        title = title.replace(' Modern Guide', '').strip()
+        header_title = header_title.replace(' Modern Guide', '').strip()
         
         return {
-            'title': title,
+            'title': header_title,
             'header_title': header_title,
             'header_description': header_description,
-            'topics': topics[:3],  # 最初の3つのトピックのみ
-            'tags': tags[:5],      # 最初の5つのタグのみ
+            'topics': topics,
+            'tags': tags,
             'path': file_path,
-            'size': f"{file_size:.1f}KB",
-            'modified': datetime.fromtimestamp(mod_time).strftime('%Y-%m-%d %H:%M'),
-            'emoji': extract_emoji(header_title) or '📄'
+            'modified': datetime.fromtimestamp(os.path.getmtime(file_path)).strftime('%Y-%m-%d %H:%M')
         }
-
-def extract_emoji(text):
-    """
-    文字列から最初の絵文字を抽出
-    """
-    if not text:
-        return None
-    emoji_pattern = re.compile("["
-        u"\U0001F600-\U0001F64F"  # emoticons
-        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-        u"\U0001F680-\U0001F6FF"  # transport & map symbols
-        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-        u"\U00002702-\U000027B0"
-        u"\U000024C2-\U0001F251"
-        "]+", flags=re.UNICODE)
-    emojis = emoji_pattern.findall(text)
-    return emojis[0] if emojis else None
 
 def generate_index_html(html_files_info):
     """
-    抽出した情報からリッチなindex.htmlを生成する
+    インデックスページのHTMLを生成する
     """
     html_content = '''<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document Library</title>
+<title>ドキュメントライブラリ</title>
 <style>
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
-    background: #f8fafc;
-    padding: 2rem;
-  }
-  .container {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  .header {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
-    padding: 2rem;
-  }
-  .content {
-    padding: 2rem;
-  }
-  .card {
-    background: #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
-  }
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  .card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .card-emoji {
-    font-size: 2rem;
-    margin-right: 1rem;
-    background: white;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  .card-title {
-    flex-grow: 1;
-  }
-  .card h2 {
-    margin: 0;
-    color: #1e293b;
-    font-size: 1.25rem;
-  }
-  .card-meta {
-    font-size: 0.875rem;
-    color: #64748b;
-    margin-top: 0.25rem;
-  }
-  .description {
-    color: #475569;
-    margin: 0.5rem 0;
-    line-height: 1.6;
-  }
-  .topics {
-    margin: 1rem 0;
-    color: #475569;
-    font-size: 0.875rem;
-  }
-  .topic {
-    display: inline-block;
-    margin-right: 1rem;
-  }
-  .topic::before {
-    content: "•";
-    margin-right: 0.5rem;
-    color: #3b82f6;
-  }
-  a {
-    text-decoration: none;
-    color: #1d4ed8;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  .tag-group {
-    margin-top: 1rem;
-  }
-  .tag {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    background: #e0e7ff;
-    color: #1d4ed8;
-    font-size: 0.75rem;
-    margin: 0.3rem;
-    transition: all 0.2s ease;
-  }
-  .tag:hover {
-    background: #1d4ed8;
-    color: white;
-  }
-  .stats {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e2e8f0;
-    font-size: 0.875rem;
-    color: #64748b;
-  }
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        background: #f8fafc;
+        padding: 2rem;
+    }
+    .container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+    .header {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 2rem;
+    }
+    .content {
+        padding: 2rem;
+    }
+    .card {
+        background: #f1f5f9;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 1.25rem;
+    }
+    .card-meta {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+    }
+    .description {
+        color: #475569;
+        margin: 0.5rem 0;
+        line-height: 1.6;
+    }
+    .tag-group {
+        margin-top: 1rem;
+    }
+    .tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        background: #3b82f6;
+        color: white;
+        font-size: 0.875rem;
+        margin: 0.3rem;
+        transition: all 0.2s ease;
+    }
+    .tag:hover {
+        background: #1d4ed8;
+    }
+    .success { background: #22c55e; }
+    .warning { background: #eab308; }
+    .info { background: #0ea5e9; }
+    .danger { background: #ef4444; }
+    .primary { background: #6366f1; }
+    .sidebar-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle.active {
+        background: #f1f5f9;
+        transform: translateX(-250px);
+    }
+    .sidebar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background: #f1f5f9;
+        border-left: 1px solid #e2e8f0;
+        padding: 1rem;
+        padding-top: 4rem;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .sidebar-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    .sidebar-item:hover {
+        background: white;
+        color: #1d4ed8;
+        transform: translateX(4px);
+    }
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>📚 Document Library</h1>
-      <p>Technical Documentation & Guides</p>
-    </div>
-    
-    <div class="content">
-'''
-    
-    # 記事の内容を追加
+    <div class="container">
+        <div class="header">
+            <h1>📚 ドキュメントライブラリ</h1>
+            <p>技術ドキュメント & ガイド</p>
+        </div>
+        <div class="content">'''
+
     for info in html_files_info:
-        topics_html = '\n'.join([f'<span class="topic">{topic}</span>' for topic in info['topics']]) if info['topics'] else ''
-        tags_html = '\n'.join([f'<span class="tag">{tag}</span>' for tag in info['tags']]) if info['tags'] else ''
-        
-        html_content += f'''      <div class="card">
-        <div class="card-header">
-          <div class="card-emoji">{info['emoji']}</div>
-          <div class="card-title">
-            <h2><a href="{info['path']}">{info['header_title']}</a></h2>
-            <div class="card-meta">{info['path']} • {info['modified']}</div>
-          </div>
-        </div>
-        <p class="description">{info['header_description']}</p>
-        <div class="topics">{topics_html}</div>
-        <div class="tag-group">{tags_html}</div>
-        <div class="stats">
-          <span>📏 {info['size']}</span>
-          <span>📝 {len(info['topics'])} sections</span>
-          <span>🏷 {len(info['tags'])} tags</span>
-        </div>
-      </div>
-'''
+        html_content += f'''
+            <div class="card">
+                <h2><a href="{info['path']}" style="text-decoration: none; color: inherit;">
+                    {info['header_title']}
+                </a></h2>
+                <div class="card-meta">最終更新: {info['modified']}</div>
+                <p class="description">{info['header_description']}</p>
+                <div class="tag-group">
+                    {''.join(f'<span class="tag">{tag}</span>' for tag in info['tags'][:5])}
+                </div>
+            </div>'''
+
+    html_content += '''
+        </div>'''
     
-    # HTMLを閉じる
-    html_content += '''    </div>
-  </div>
+    # サイドバーを追加
+    html_content += generate_sidebar_html(html_files_info)
+    
+    html_content += '''
+    </div>
 </body>
 </html>'''
-    
+
     return html_content
 
 def main():
-    # カレントディレクトリ内のすべてのHTMLファイルを取得
-    html_files = glob.glob('**/*.html', recursive=True)
+    content_dir = 'content'
+    build_dir = 'build'
     
-    # index.htmlは除外
-    html_files = [f for f in html_files if not f.endswith('index.html')]
+    # buildディレクトリをクリーンアップ
+    if os.path.exists(build_dir):
+        shutil.rmtree(build_dir)
+    os.makedirs(build_dir)
     
-    # 各HTMLファイルの情報を抽出
+    # contentディレクトリを作成（存在しない場合）
+    if not os.path.exists(content_dir):
+        os.makedirs(content_dir)
+    
+    # contentディレクトリの内容をコピー
+    if os.path.exists(content_dir):
+        shutil.copytree(content_dir, os.path.join(build_dir, 'content'), dirs_exist_ok=True)
+    
+    # HTMLファイルを処理
+    html_files = glob.glob(os.path.join(content_dir, '**/*.html'), recursive=True)
     files_info = []
+    
+    # ファイル情報を収集
     for file_path in html_files:
-        try:
-            info = extract_html_info(file_path)
-            files_info.append(info)
-        except Exception as e:
-            print(f"Error processing {file_path}: {str(e)}")
+        if os.path.basename(file_path) != 'index.html':
+            try:
+                info = extract_html_info(file_path)
+                info['path'] = os.path.join('content', os.path.relpath(file_path, content_dir))
+                files_info.append(info)
+            except Exception as e:
+                print(f"Error processing {file_path}: {str(e)}")
+    
+    # 各HTMLファイルを処理
+    for src_path in html_files:
+        if os.path.basename(src_path) != 'index.html':
+            rel_path = os.path.relpath(src_path, content_dir)
+            dest_path = os.path.join(build_dir, 'content', rel_path)
+            
+            try:
+                with open(src_path, 'r', encoding='utf-8') as file:
+                    content = file.read()
+                
+                # サイドバーを追加
+                modified_content = modify_html_content(content, generate_sidebar_html(files_info))
+                
+                # 処理済みファイルを保存
+                os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                with open(dest_path, 'w', encoding='utf-8') as file:
+                    file.write(modified_content)
+                    
+            except Exception as e:
+                print(f"Error modifying {rel_path}: {str(e)}")
     
     # index.htmlを生成
     index_content = generate_index_html(files_info)
-    
-    # index.htmlをルートディレクトリに保存
-    with open('index.html', 'w', encoding='utf-8') as f:
+    with open(os.path.join(build_dir, 'index.html'), 'w', encoding='utf-8') as f:
         f.write(index_content)
+    
+    print(f"\nProcessing complete. Output files are in the '{build_dir}' directory.")
 
 if __name__ == "__main__":
     main()
