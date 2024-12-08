@@ -1,0 +1,12 @@
+{
+    "guides": [
+        {
+            "path": "PIL.html",
+            "order": 1
+        },
+        {
+            "path": "pathlib.html",
+            "order": 2
+        }
+    ]
+}

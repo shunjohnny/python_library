@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Python Libraries Guide</title>
+<style>
+  /* 前回と同じスタイル定義を維持 */
+  :root {
+    --primary: #3b82f6;
+    --primary-dark: #1d4ed8;
+    --secondary: #6366f1;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    line-height: 1.5;
+  }
+
+  .navbar {
+    background: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--primary);
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+
+  .hero p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card h2 {
+    margin: 0;
+    margin-bottom: 1rem;
+    color: var(--primary);
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+  }
+
+  .button:hover {
+    background: var(--primary-dark);
+  }
+
+  .footer {
+    background: var(--gray-800);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  #loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--gray-700);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+    
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .hero p {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="logo">🐍 Python Guides</a>
+      <div class="nav-links">
+        <a href="#libraries">ライブラリ</a>
+        <a href="https://github.com/yourusername/python-guides" target="_blank">GitHub</a>
+        <a href="#about">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Modern Python Libraries Guide</h1>
+    <p>最新のPythonライブラリの使い方をわかりやすく解説。実践的なコード例と共に学べます。</p>
+  </header>
+
+  <main class="content">
+    <section id="libraries">
+      <div id="loading">ガイドを読み込み中...</div>
+      <div id="guides-grid" class="grid">
+        <!-- JavaScriptで動的に生成 -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 Python Guides. このサイトはGitHub Pagesでホストされています。</p>
+    <p>
+      <a href="https://github.com/yourusername/python-guides" target="_blank" style="color: var(--primary)">GitHub</a> |
+      <a href="#" style="color: var(--primary)">お問い合わせ</a>
+    </p>
+  </footer>
+
+  <script src="js/guide-loader.js"></script>
+</body>
+</html>
