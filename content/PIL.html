@@ -91,6 +91,34 @@
   .number {
     color: #bd93f9;
   }
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .method-table th {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+  }
+  .method-table tr:last-child td {
+    border-bottom: none;
+  }
+  .method-table .category {
+    color: #1d4ed8;
+    font-weight: 500;
+  }
 </style>
 </head>
 <body>
@@ -100,6 +128,78 @@
       <p>Pythonの画像処理ライブラリ</p>
     </div>
     
+    <div class="content">
+      <div class="card">
+        <h2>📝 主要メソッド一覧</h2>
+        <p class="description">PILライブラリの主要なメソッドと機能の概要です。</p>
+        <table class="method-table">
+          <tr>
+            <th>カテゴリ</th>
+            <th>メソッド</th>
+            <th>説明</th>
+          </tr>
+          <tr>
+            <td class="category">基本操作</td>
+            <td>open(file)</td>
+            <td>画像ファイルを開く</td>
+          </tr>
+          <tr>
+            <td class="category">基本操作</td>
+            <td>save(file)</td>
+            <td>画像を保存</td>
+          </tr>
+          <tr>
+            <td class="category">基本操作</td>
+            <td>show()</td>
+            <td>画像をシステムのビューアで表示</td>
+          </tr>
+          <tr>
+            <td class="category">情報取得</td>
+            <td>size</td>
+            <td>画像サイズを取得 (width, height)</td>
+          </tr>
+          <tr>
+            <td class="category">情報取得</td>
+            <td>mode</td>
+            <td>カラーモードを取得 (RGB, RGBA, L等)</td>
+          </tr>
+          <tr>
+            <td class="category">変換操作</td>
+            <td>thumbnail(size)</td>
+            <td>アスペクト比を維持してサイズ変更</td>
+          </tr>
+          <tr>
+            <td class="category">変換操作</td>
+            <td>resize(size)</td>
+            <td>指定サイズに変更</td>
+          </tr>
+          <tr>
+            <td class="category">変換操作</td>
+            <td>rotate(angle)</td>
+            <td>画像を回転</td>
+          </tr>
+          <tr>
+            <td class="category">変換操作</td>
+            <td>crop(box)</td>
+            <td>画像を切り抜き</td>
+          </tr>
+          <tr>
+            <td class="category">フィルター</td>
+            <td>filter(filter)</td>
+            <td>フィルターを適用（BLUR, SHARPEN等）</td>
+          </tr>
+          <tr>
+            <td class="category">カラー処理</td>
+            <td>convert(mode)</td>
+            <td>カラーモードを変換</td>
+          </tr>
+          <tr>
+            <td class="category">高度な操作</td>
+            <td>paste(im, box, mask)</td>
+            <td>画像の一部を別の画像で置き換え</td>
+          </tr>
+        </table>
+      </div>
     <div class="content">
       <div class="card">
         <h2>📍 基本操作</h2>

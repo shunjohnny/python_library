@@ -94,6 +94,34 @@
   .number {
     color: #bd93f9;
   }
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .method-table th {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+  }
+  .method-table tr:last-child td {
+    border-bottom: none;
+  }
+  .method-table .category {
+    color: #1d4ed8;
+    font-weight: 500;
+  }
 </style>
 </head>
 <body>
@@ -104,6 +132,77 @@
     </div>
     
     <div class="content">
+      <div class="card">
+        <h2>📝 主要メソッド一覧</h2>
+        <p class="description">Shutilライブラリの主要なメソッドと機能の概要です。</p>
+        <table class="method-table">
+          <tr>
+            <th>カテゴリ</th>
+            <th>メソッド</th>
+            <th>説明</th>
+          </tr>
+          <tr>
+            <td class="category">コピー操作</td>
+            <td>copy(src, dst)</td>
+            <td>ファイルを基本コピー（内容のみ）</td>
+          </tr>
+          <tr>
+            <td class="category">コピー操作</td>
+            <td>copy2(src, dst)</td>
+            <td>メタデータを含めてファイルをコピー</td>
+          </tr>
+          <tr>
+            <td class="category">コピー操作</td>
+            <td>copytree(src, dst)</td>
+            <td>ディレクトリを再帰的にコピー</td>
+          </tr>
+          <tr>
+            <td class="category">削除操作</td>
+            <td>rmtree(path)</td>
+            <td>ディレクトリを再帰的に削除</td>
+          </tr>
+          <tr>
+            <td class="category">移動操作</td>
+            <td>move(src, dst)</td>
+            <td>ファイル/ディレクトリを移動または名前変更</td>
+          </tr>
+          <tr>
+            <td class="category">ディスク操作</td>
+            <td>disk_usage(path)</td>
+            <td>ディスクの使用量情報を取得（total, used, free）</td>
+          </tr>
+          <tr>
+            <td class="category">アーカイブ</td>
+            <td>make_archive(base_name, format, root_dir)</td>
+            <td>指定ディレクトリをアーカイブ化（zip, tar等）</td>
+          </tr>
+          <tr>
+            <td class="category">アーカイブ</td>
+            <td>unpack_archive(filename, extract_dir)</td>
+            <td>アーカイブを指定ディレクトリに展開</td>
+          </tr>
+          <tr>
+            <td class="category">ファイルシステム</td>
+            <td>get_terminal_size()</td>
+            <td>ターミナルのサイズを取得</td>
+          </tr>
+          <tr>
+            <td class="category">ファイルシステム</td>
+            <td>which(cmd)</td>
+            <td>実行可能ファイルのパスを検索</td>
+          </tr>
+          <tr>
+            <td class="category">ユーティリティ</td>
+            <td>ignore_patterns(*patterns)</td>
+            <td>コピー時の除外パターンを指定</td>
+          </tr>
+          <tr>
+            <td class="category">ユーティリティ</td>
+            <td>chown(path, user, group)</td>
+            <td>ファイルの所有者とグループを変更</td>
+          </tr>
+        </table>
+      </div>
       <div class="card">
         <h2>📁 ファイルコピー操作</h2>
         <p class="description">ファイルやディレクトリの高レベルなコピー操作を提供します。メタデータやパーミッションも適切に処理します。</p>

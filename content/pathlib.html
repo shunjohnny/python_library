@@ -2,6 +2,7 @@
 <html>
 <head>
 <style>
+  /* 既存のスタイル全てを保持 */
   body {
     font-family: system-ui, -apple-system, sans-serif;
     max-width: 900px;
@@ -58,38 +59,47 @@
     margin: 0.5rem 0;
     line-height: 1.6;
   }
-  .method {
-    color: #38bdf8;
+  /* 既存のシンタックスハイライト用スタイル */
+  .method { color: #38bdf8; }
+  .string { color: #a5d6ff; }
+  .comment { color: #6b7280; }
+  .operator { color: #ff79c6; }
+  .success { background: #22c55e; }
+  .warning { background: #eab308; }
+  .info { background: #0ea5e9; }
+  .danger { background: #ef4444; }
+  .primary { background: #6366f1; }
+  .keyword { color: #ff79c6; }
+  .number { color: #bd93f9; }
+
+  /* 新しく追加する表のスタイル */
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
   }
-  .string {
-    color: #a5d6ff;
+  .method-table th {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
   }
-  .comment {
-    color: #6b7280;
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
   }
-  .operator {
-    color: #ff79c6;
+  .method-table tr:last-child td {
+    border-bottom: none;
   }
-  .success {
-    background: #22c55e;
-  }
-  .warning {
-    background: #eab308;
-  }
-  .info {
-    background: #0ea5e9;
-  }
-  .danger {
-    background: #ef4444;
-  }
-  .primary {
-    background: #6366f1;
-  }
-  .keyword {
-    color: #ff79c6;
-  }
-  .number {
-    color: #bd93f9;
+  .method-table .category {
+    color: #1d4ed8;
+    font-weight: 500;
   }
 </style>
 </head>
@@ -101,6 +111,78 @@
     </div>
     
     <div class="content">
+      <div class="card">
+        <h2>📝 主要メソッド一覧</h2>
+        <p class="description">よく使用するPathlibのメソッドと属性の概要です。</p>
+        <table class="method-table">
+          <tr>
+            <th>カテゴリ</th>
+            <th>メソッド/属性</th>
+            <th>説明</th>
+          </tr>
+          <tr>
+            <td class="category">基本情報</td>
+            <td>name</td>
+            <td>ファイル名（拡張子含む）</td>
+          </tr>
+          <tr>
+            <td class="category">基本情報</td>
+            <td>stem</td>
+            <td>ファイル名（拡張子なし）</td>
+          </tr>
+          <tr>
+            <td class="category">基本情報</td>
+            <td>suffix</td>
+            <td>拡張子（ドット含む）</td>
+          </tr>
+          <tr>
+            <td class="category">ディレクトリ</td>
+            <td>parent</td>
+            <td>親ディレクトリのパス</td>
+          </tr>
+          <tr>
+            <td class="category">ディレクトリ</td>
+            <td>parents</td>
+            <td>すべての親ディレクトリのリスト</td>
+          </tr>
+          <tr>
+            <td class="category">ファイル操作</td>
+            <td>exists()</td>
+            <td>ファイルまたはディレクトリの存在確認</td>
+          </tr>
+          <tr>
+            <td class="category">ファイル操作</td>
+            <td>is_file()</td>
+            <td>ファイルであるかの確認</td>
+          </tr>
+          <tr>
+            <td class="category">ファイル操作</td>
+            <td>is_dir()</td>
+            <td>ディレクトリであるかの確認</td>
+          </tr>
+          <tr>
+            <td class="category">パス操作</td>
+            <td>absolute()</td>
+            <td>絶対パスを取得</td>
+          </tr>
+          <tr>
+            <td class="category">パス操作</td>
+            <td>resolve()</td>
+            <td>シンボリックリンクを解決した絶対パス</td>
+          </tr>
+          <tr>
+            <td class="category">ユーティリティ</td>
+            <td>glob('pattern')</td>
+            <td>パターンにマッチするファイルを検索</td>
+          </tr>
+          <tr>
+            <td class="category">ユーティリティ</td>
+            <td>rglob('pattern')</td>
+            <td>再帰的にパターンマッチするファイルを検索</td>
+          </tr>
+        </table>
+      </div>
+      
       <div class="card">
         <h2>📍 パス操作の基本</h2>
         <p class="description">パスの作成と基本的な情報取得。クロスプラットフォームで安全なパス操作が可能です。</p>

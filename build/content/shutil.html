@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Python Shutil Modern Guide</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: #3b82f6;
+    color: white;
+    font-size: 0.875rem;
+    margin: 0.3rem;
+  }
+  .tag-group {
+    margin: 1rem 0;
+  }
+  .description {
+    color: #475569;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+  .method {
+    color: #38bdf8;
+  }
+  .string {
+    color: #a5d6ff;
+  }
+  .comment {
+    color: #6b7280;
+  }
+  .operator {
+    color: #ff79c6;
+  }
+  .success {
+    background: #22c55e;
+  }
+  .warning {
+    background: #eab308;
+  }
+  .info {
+    background: #0ea5e9;
+  }
+  .danger {
+    background: #ef4444;
+  }
+  .primary {
+    background: #6366f1;
+  }
+  .keyword {
+    color: #ff79c6;
+  }
+  .number {
+    color: #bd93f9;
+  }
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .method-table th {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+  }
+  .method-table tr:last-child td {
+    border-bottom: none;
+  }
+  .method-table .category {
+    color: #1d4ed8;
+    font-weight: 500;
+  }
+
+    <style>
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        background: #f8fafc;
+        padding: 2rem;
+    }
+    .container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+    .sidebar-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle.active {
+        background: #f1f5f9;
+        transform: translateX(-250px);
+    }
+    .sidebar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background: #f1f5f9;
+        border-left: 1px solid #e2e8f0;
+        padding: 1rem;
+        padding-top: 4rem;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .sidebar-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    .sidebar-item:hover {
+        background: white;
+        color: #1d4ed8;
+        transform: translateX(4px);
+    }
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        height: 2.5rem;
+        padding: 0 1rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #475569;
+        text-decoration: none;
+    }
+    .back-button:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        color: #1d4ed8;
+    }
+    .back-button span {
+        margin-right: 0.5rem;
+    }
+    </style>
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>📦 Shutil</h1>
+<p>Pythonのファイル操作・システムユーティリティライブラリ</p>
+</div>
+<div class="content">
+<div class="card">
+<h2>📝 主要メソッド一覧</h2>
+<p class="description">Shutilライブラリの主要なメソッドと機能の概要です。</p>
+<table class="method-table">
+<tr>
+<th>カテゴリ</th>
+<th>メソッド</th>
+<th>説明</th>
+</tr>
+<tr>
+<td class="category">コピー操作</td>
+<td>copy(src, dst)</td>
+<td>ファイルを基本コピー（内容のみ）</td>
+</tr>
+<tr>
+<td class="category">コピー操作</td>
+<td>copy2(src, dst)</td>
+<td>メタデータを含めてファイルをコピー</td>
+</tr>
+<tr>
+<td class="category">コピー操作</td>
+<td>copytree(src, dst)</td>
+<td>ディレクトリを再帰的にコピー</td>
+</tr>
+<tr>
+<td class="category">削除操作</td>
+<td>rmtree(path)</td>
+<td>ディレクトリを再帰的に削除</td>
+</tr>
+<tr>
+<td class="category">移動操作</td>
+<td>move(src, dst)</td>
+<td>ファイル/ディレクトリを移動または名前変更</td>
+</tr>
+<tr>
+<td class="category">ディスク操作</td>
+<td>disk_usage(path)</td>
+<td>ディスクの使用量情報を取得（total, used, free）</td>
+</tr>
+<tr>
+<td class="category">アーカイブ</td>
+<td>make_archive(base_name, format, root_dir)</td>
+<td>指定ディレクトリをアーカイブ化（zip, tar等）</td>
+</tr>
+<tr>
+<td class="category">アーカイブ</td>
+<td>unpack_archive(filename, extract_dir)</td>
+<td>アーカイブを指定ディレクトリに展開</td>
+</tr>
+<tr>
+<td class="category">ファイルシステム</td>
+<td>get_terminal_size()</td>
+<td>ターミナルのサイズを取得</td>
+</tr>
+<tr>
+<td class="category">ファイルシステム</td>
+<td>which(cmd)</td>
+<td>実行可能ファイルのパスを検索</td>
+</tr>
+<tr>
+<td class="category">ユーティリティ</td>
+<td>ignore_patterns(*patterns)</td>
+<td>コピー時の除外パターンを指定</td>
+</tr>
+<tr>
+<td class="category">ユーティリティ</td>
+<td>chown(path, user, group)</td>
+<td>ファイルの所有者とグループを変更</td>
+</tr>
+</table>
+</div>
+<div class="card">
+<h2>📁 ファイルコピー操作</h2>
+<p class="description">ファイルやディレクトリの高レベルなコピー操作を提供します。メタデータやパーミッションも適切に処理します。</p>
+<div class="code"><span class="keyword">import</span> shutil
+
+<span class="comment"># ファイルのコピー</span>
+shutil<span class="operator">.</span><span class="method">copy</span>(<span class="string">'source.txt'</span>, <span class="string">'dest.txt'</span>)       <span class="comment"># ファイルをコピー</span>
+shutil<span class="operator">.</span><span class="method">copy2</span>(<span class="string">'source.txt'</span>, <span class="string">'dest.txt'</span>)      <span class="comment"># メタデータも含めてコピー</span>
+<span class="comment"># ディレクトリのコピー</span>
+shutil<span class="operator">.</span><span class="method">copytree</span>(
+    <span class="string">'src_dir'</span>,
+    <span class="string">'dst_dir'</span>,
+    ignore=shutil<span class="operator">.</span>ignore_patterns(<span class="string">'*.pyc'</span>, <span class="string">'tmp*'</span>)
+)</div>
+<div class="tag-group">
+<span class="tag info">copy: 基本コピー</span>
+<span class="tag info">copy2: メタデータ付きコピー</span>
+<span class="tag warning">copytree: ディレクトリコピー</span>
+</div>
+</div>
+<div class="card">
+<h2>🗑 削除操作</h2>
+<p class="description">ファイルやディレクトリの安全な削除操作を提供します。再帰的な削除やエラーハンドリングにも対応。</p>
+<div class="code"><span class="comment"># ディレクトリの削除</span>
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>)                    <span class="comment"># ディレクトリを再帰的に削除</span>
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>, ignore_errors=<span class="keyword">True</span>)  <span class="comment"># エラーを無視</span>
+<span class="comment"># カスタムエラーハンドリング</span>
+<span class="keyword">def</span> <span class="method">error_handler</span>(func, path, exc_info):
+    print(<span class="string">f"Error: {exc_info[1]} - {path}"</span>)
+
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>, onerror=error_handler)</div>
+<div class="tag-group">
+<span class="tag danger">rmtree: ディレクトリ削除</span>
+<span class="tag warning">error_handler: エラー処理</span>
+</div>
+</div>
+<div class="card">
+<h2>📋 ファイル移動と名前変更</h2>
+<p class="description">ファイルやディレクトリの移動と名前変更操作を提供します。既存ファイルの処理にも対応。</p>
+<div class="code"><span class="comment"># ファイル/ディレクトリの移動</span>
+shutil<span class="operator">.</span><span class="method">move</span>(<span class="string">'src'</span>, <span class="string">'dst'</span>)              <span class="comment"># 移動操作</span>
+<span class="comment"># ディスク間のコピーと移動</span>
+src = <span class="string">'/src/path'</span>
+dst = <span class="string">'/dst/path'</span>
+<span class="comment"># 既存の場合は上書き</span>
+<span class="keyword">if</span> os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">exists</span>(dst):
+    shutil<span class="operator">.</span><span class="method">rmtree</span>(dst)
+shutil<span class="operator">.</span><span class="method">move</span>(src, dst)</div>
+<div class="tag-group">
+<span class="tag success">move: ファイル移動</span>
+<span class="tag warning">exists: 存在確認</span>
+<span class="tag danger">rmtree: 削除</span>
+</div>
+</div>
+<div class="card">
+<h2">💾 ディスク操作
+<p class="description">ディスク使用量の確認やアーカイブ操作を提供します。システム全体のディスク情報も取得可能。</p>
+<div class="code"><span class="comment"># ディスク使用量の取得</span>
+total, used, free = shutil<span class="operator">.</span><span class="method">disk_usage</span>(<span class="string">'/'</span>)
+print(<span class="string">f"Total: {total // (2**30)} GiB"</span>)
+print(<span class="string">f"Used: {used // (2**30)} GiB"</span>)
+print(<span class="string">f"Free: {free // (2**30)} GiB"</span>)
+
+<span class="comment"># アーカイブの作成</span>
+shutil<span class="operator">.</span><span class="method">make_archive</span>(
+    <span class="string">'backup'</span>,           <span class="comment"># アーカイブ名（拡張子なし）</span>
+<span class="string">'zip'</span>,              <span class="comment"># フォーマット（zip, tar, gztar等）</span>
+    root_dir=<span class="string">'src_dir'</span> <span class="comment"># アーカイブ対象のディレクトリ</span>
+)
+
+<span class="comment"># アーカイブの展開</span>
+shutil<span class="operator">.</span><span class="method">unpack_archive</span>(<span class="string">'backup.zip'</span>, <span class="string">'extract_dir'</span>)</div>
+<div class="tag-group">
+<span class="tag info">disk_usage: ディスク使用量</span>
+<span class="tag success">make_archive: アーカイブ作成</span>
+<span class="tag warning">unpack_archive: アーカイブ展開</span>
+</div>
+</h2"></div>
+<div class="card">
+<h2>🛠️ 実践的な使用例</h2>
+<p class="description">一般的なユースケースに対応する実践的な使用例です。エラーハンドリングやバックアップ処理を含みます。</p>
+<div class="code"><span class="keyword">import</span> shutil
+<span class="keyword">import</span> os
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="comment"># バックアップ作成関数</span>
+<span class="keyword">def</span> <span class="method">create_backup</span>(src_dir, backup_dir=<span class="string">'backups'</span>):
+    <span class="comment"># バックアップ名に日時を含める</span>
+    timestamp = datetime<span class="operator">.</span><span class="method">now</span>()<span class="operator">.</span><span class="method">strftime</span>(<span class="string">'%Y%m%d_%H%M%S'</span>)
+    backup_name = f<span class="string">'backup_{timestamp}'</span>
+<span class="comment"># バックアップディレクトリの作成</span>
+    os<span class="operator">.</span><span class="method">makedirs</span>(backup_dir, exist_ok=<span class="keyword">True</span>)
+    
+    <span class="keyword">try</span>:
+        <span class="comment"># 圧縮アーカイブとしてバックアップを作成</span>
+        archive_path = shutil<span class="operator">.</span><span class="method">make_archive</span>(
+            os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">join</span>(backup_dir, backup_name),
+            <span class="string">'gztar'</span>,
+            src_dir
+        )
+        print(f<span class="string">"バックアップを作成しました: {archive_path}"</span>)
+        <span class="keyword">return</span> archive_path
+        
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        print(f<span class="string">"バックアップ作成中にエラーが発生: {e}"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+<span class="comment"># 古いバックアップの削除</span>
+<span class="keyword">def</span> <span class="method">cleanup_old_backups</span>(backup_dir, keep_count=<span class="number">5</span>):
+    backups = sorted([
+        os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">join</span>(backup_dir, f)
+        <span class="keyword">for</span> f <span class="keyword">in</span> os<span class="operator">.</span><span class="method">listdir</span>(backup_dir)
+        <span class="keyword">if</span> f<span class="operator">.</span><span class="method">startswith</span>(<span class="string">'backup_'</span>)
+    ])
+    
+    <span class="comment"># 古いバックアップを削除</span>
+<span class="keyword">while</span> len(backups) &gt; keep_count:
+        old_backup = backups<span class="operator">.</span><span class="method">pop</span>(<span class="number">0</span>)
+        <span class="keyword">try</span>:
+            os<span class="operator">.</span><span class="method">remove</span>(old_backup)
+            print(f<span class="string">"古いバックアップを削除: {old_backup}"</span>)
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            print(f<span class="string">"バックアップ削除中にエラー: {e}"</span>)</div>
+<div class="tag-group">
+<span class="tag success">バックアップ作成</span>
+<span class="tag warning">エラーハンドリング</span>
+<span class="tag info">自動クリーンアップ</span>
+<span class="tag danger">ファイル管理</span>
+</div>
+</div>
+</div>
+
+<a class="back-button" href="/index.html">
+<span>←</span> インデックス
+    </a>
+
+<button class="sidebar-toggle" id="sidebarToggle">
+<span>📑</span>
+</button>
+<div class="sidebar" id="sidebar">
+<nav class="sidebar-content">
+<a class="sidebar-item" href="content/pathlib.html">🗂 Pathlib</a>
+<a class="sidebar-item" href="content/shutil.html">📦 Shutil</a>
+<a class="sidebar-item" href="content/PIL.html">🖼 PIL</a>
+</nav>
+</div>
+<script>
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+            this.classList.toggle("active");
+        });
+    </script>
+</div>
+</body>
+</html>
