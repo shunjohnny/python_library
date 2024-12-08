@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コンテンツ一覧</title>
+<title>Document Library</title>
 <style>
   body {
     font-family: system-ui, -apple-system, sans-serif;
@@ -31,19 +31,61 @@
     border-radius: 0.5rem;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    transition: transform 0.2s ease-in-out;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
   }
   .card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .card-emoji {
+    font-size: 2rem;
+    margin-right: 1rem;
+    background: white;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .card-title {
+    flex-grow: 1;
   }
   .card h2 {
-    margin-top: 0;
+    margin: 0;
     color: #1e293b;
+    font-size: 1.25rem;
+  }
+  .card-meta {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 0.25rem;
   }
   .description {
     color: #475569;
     margin: 0.5rem 0;
     line-height: 1.6;
+  }
+  .topics {
+    margin: 1rem 0;
+    color: #475569;
+    font-size: 0.875rem;
+  }
+  .topic {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+  .topic::before {
+    content: "•";
+    margin-right: 0.5rem;
+    color: #3b82f6;
   }
   a {
     text-decoration: none;
@@ -59,40 +101,102 @@
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
-    background: #3b82f6;
-    color: white;
-    font-size: 0.875rem;
+    background: #e0e7ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
     margin: 0.3rem;
+    transition: all 0.2s ease;
+  }
+  .tag:hover {
+    background: #1d4ed8;
+    color: white;
+  }
+  .stats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.875rem;
+    color: #64748b;
   }
 </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>📚 コンテンツライブラリ</h1>
-      <p>ドキュメントとガイド集</p>
+      <h1>📚 Document Library</h1>
+      <p>Technical Documentation & Guides</p>
     </div>
     
     <div class="content">
       <div class="card">
-        <h2><a href="content/pathlib.html">pathlib.html</a></h2>
-        <p class="description"></p>
-        <div class="tag-group">
-          <span class="tag">Document</span>
+        <div class="card-header">
+          <div class="card-emoji">🗂</div>
+          <div class="card-title">
+            <h2><a href="content/pathlib.html">🗂 Pathlib Modern Guide</a></h2>
+            <div class="card-meta">content/pathlib.html • 2024-12-08 21:06</div>
+          </div>
+        </div>
+        <p class="description">Pythonのモダンなファイルパス操作ライブラリ</p>
+        <div class="topics"><span class="topic">📍 パス操作の基本</span>
+<span class="topic">💫 ファイル操作とチェック</span>
+<span class="topic">📁 ディレクトリ操作</span></div>
+        <div class="tag-group"><span class="tag">parent: 直近の親ディレクトリ</span>
+<span class="tag">parents: 親ディレクトリのリスト</span>
+<span class="tag">name: ファイル名</span>
+<span class="tag">suffix: 拡張子</span>
+<span class="tag">stem: 拡張子なしファイル名</span></div>
+        <div class="stats">
+          <span>📏 10.2KB</span>
+          <span>📝 3 sections</span>
+          <span>🏷 5 tags</span>
         </div>
       </div>
       <div class="card">
-        <h2><a href="content/shutil.html">Python Shutil Modern Guide</a></h2>
-        <p class="description"></p>
-        <div class="tag-group">
-          <span class="tag">Document</span>
+        <div class="card-header">
+          <div class="card-emoji">📦</div>
+          <div class="card-title">
+            <h2><a href="content/shutil.html">📦 Shutil Modern Guide</a></h2>
+            <div class="card-meta">content/shutil.html • 2024-12-08 21:49</div>
+          </div>
+        </div>
+        <p class="description">Pythonのファイル操作・システムユーティリティライブラリ</p>
+        <div class="topics"><span class="topic">📁 ファイルコピー操作</span>
+<span class="topic">🗑 削除操作</span>
+<span class="topic">📋 ファイル移動と名前変更</span></div>
+        <div class="tag-group"><span class="tag">copy: 基本コピー</span>
+<span class="tag">copy2: メタデータ付きコピー</span>
+<span class="tag">copytree: ディレクトリコピー</span>
+<span class="tag">rmtree: ディレクトリ削除</span>
+<span class="tag">error_handler: エラー処理</span></div>
+        <div class="stats">
+          <span>📏 11.4KB</span>
+          <span>📝 3 sections</span>
+          <span>🏷 5 tags</span>
         </div>
       </div>
       <div class="card">
-        <h2><a href="content/PIL.html">PIL.html</a></h2>
-        <p class="description"></p>
-        <div class="tag-group">
-          <span class="tag">Document</span>
+        <div class="card-header">
+          <div class="card-emoji">🖼</div>
+          <div class="card-title">
+            <h2><a href="content/PIL.html">🖼 PIL Modern Guide</a></h2>
+            <div class="card-meta">content/PIL.html • 2024-12-08 21:06</div>
+          </div>
+        </div>
+        <p class="description">Pythonの画像処理ライブラリ</p>
+        <div class="topics"><span class="topic">📍 基本操作</span>
+<span class="topic">🔄 画像変換</span>
+<span class="topic">🎨 画像処理</span></div>
+        <div class="tag-group"><span class="tag">open: 画像読み込み</span>
+<span class="tag">save: 画像保存</span>
+<span class="tag">size: サイズ取得</span>
+<span class="tag">mode: カラーモード</span>
+<span class="tag">format: 画像形式</span></div>
+        <div class="stats">
+          <span>📏 8.6KB</span>
+          <span>📝 3 sections</span>
+          <span>🏷 5 tags</span>
         </div>
       </div>
     </div>
