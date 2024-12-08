@@ -23,13 +23,6 @@ class GuideLoader {
 
     async init() {
         try {
-            // まず直接ガイドの配列を使用
-            this.guides = [
-                { path: 'pil-guide.html' },
-                { path: 'pathlib-guide.html' }
-            ];
-            
-            // ガイドの情報を取得して表示
             await this.loadGuides();
         } catch (error) {
             console.error('初期化エラー:', error);
