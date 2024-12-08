@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Shutil Modern Guide</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: #3b82f6;
+    color: white;
+    font-size: 0.875rem;
+    margin: 0.3rem;
+  }
+  .tag-group {
+    margin: 1rem 0;
+  }
+  .description {
+    color: #475569;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+  .method {
+    color: #38bdf8;
+  }
+  .string {
+    color: #a5d6ff;
+  }
+  .comment {
+    color: #6b7280;
+  }
+  .operator {
+    color: #ff79c6;
+  }
+  .success {
+    background: #22c55e;
+  }
+  .warning {
+    background: #eab308;
+  }
+  .info {
+    background: #0ea5e9;
+  }
+  .danger {
+    background: #ef4444;
+  }
+  .primary {
+    background: #6366f1;
+  }
+  .keyword {
+    color: #ff79c6;
+  }
+  .number {
+    color: #bd93f9;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📦 Shutil Modern Guide</h1>
+      <p>Pythonのファイル操作・システムユーティリティライブラリ</p>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <h2>📁 ファイルコピー操作</h2>
+        <p class="description">ファイルやディレクトリの高レベルなコピー操作を提供します。メタデータやパーミッションも適切に処理します。</p>
+        <div class="code"><span class="keyword">import</span> shutil
+
+<span class="comment"># ファイルのコピー</span>
+shutil<span class="operator">.</span><span class="method">copy</span>(<span class="string">'source.txt'</span>, <span class="string">'dest.txt'</span>)       <span class="comment"># ファイルをコピー</span>
+shutil<span class="operator">.</span><span class="method">copy2</span>(<span class="string">'source.txt'</span>, <span class="string">'dest.txt'</span>)      <span class="comment"># メタデータも含めてコピー</span>
+
+<span class="comment"># ディレクトリのコピー</span>
+shutil<span class="operator">.</span><span class="method">copytree</span>(
+    <span class="string">'src_dir'</span>,
+    <span class="string">'dst_dir'</span>,
+    ignore=shutil<span class="operator">.</span>ignore_patterns(<span class="string">'*.pyc'</span>, <span class="string">'tmp*'</span>)
+)</div>
+        <div class="tag-group">
+          <span class="tag info">copy: 基本コピー</span>
+          <span class="tag info">copy2: メタデータ付きコピー</span>
+          <span class="tag warning">copytree: ディレクトリコピー</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🗑 削除操作</h2>
+        <p class="description">ファイルやディレクトリの安全な削除操作を提供します。再帰的な削除やエラーハンドリングにも対応。</p>
+        <div class="code"><span class="comment"># ディレクトリの削除</span>
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>)                    <span class="comment"># ディレクトリを再帰的に削除</span>
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>, ignore_errors=<span class="keyword">True</span>)  <span class="comment"># エラーを無視</span>
+
+<span class="comment"># カスタムエラーハンドリング</span>
+<span class="keyword">def</span> <span class="method">error_handler</span>(func, path, exc_info):
+    print(<span class="string">f"Error: {exc_info[1]} - {path}"</span>)
+
+shutil<span class="operator">.</span><span class="method">rmtree</span>(<span class="string">'dir_path'</span>, onerror=error_handler)</div>
+        <div class="tag-group">
+          <span class="tag danger">rmtree: ディレクトリ削除</span>
+          <span class="tag warning">error_handler: エラー処理</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 ファイル移動と名前変更</h2>
+        <p class="description">ファイルやディレクトリの移動と名前変更操作を提供します。既存ファイルの処理にも対応。</p>
+        <div class="code"><span class="comment"># ファイル/ディレクトリの移動</span>
+shutil<span class="operator">.</span><span class="method">move</span>(<span class="string">'src'</span>, <span class="string">'dst'</span>)              <span class="comment"># 移動操作</span>
+
+<span class="comment"># ディスク間のコピーと移動</span>
+src = <span class="string">'/src/path'</span>
+dst = <span class="string">'/dst/path'</span>
+
+<span class="comment"># 既存の場合は上書き</span>
+<span class="keyword">if</span> os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">exists</span>(dst):
+    shutil<span class="operator">.</span><span class="method">rmtree</span>(dst)
+shutil<span class="operator">.</span><span class="method">move</span>(src, dst)</div>
+        <div class="tag-group">
+          <span class="tag success">move: ファイル移動</span>
+          <span class="tag warning">exists: 存在確認</span>
+          <span class="tag danger">rmtree: 削除</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2">💾 ディスク操作</h2>
+        <p class="description">ディスク使用量の確認やアーカイブ操作を提供します。システム全体のディスク情報も取得可能。</p>
+        <div class="code"><span class="comment"># ディスク使用量の取得</span>
+total, used, free = shutil<span class="operator">.</span><span class="method">disk_usage</span>(<span class="string">'/'</span>)
+print(<span class="string">f"Total: {total // (2**30)} GiB"</span>)
+print(<span class="string">f"Used: {used // (2**30)} GiB"</span>)
+print(<span class="string">f"Free: {free // (2**30)} GiB"</span>)
+
+<span class="comment"># アーカイブの作成</span>
+shutil<span class="operator">.</span><span class="method">make_archive</span>(
+    <span class="string">'backup'</span>,           <span class="comment"># アーカイブ名（拡張子なし）</span>
+    <span class="string">'zip'</span>,              <span class="comment"># フォーマット（zip, tar, gztar等）</span>
+    root_dir=<span class="string">'src_dir'</span>  <span class="comment"># アーカイブ対象のディレクトリ</span>
+)
+
+<span class="comment"># アーカイブの展開</span>
+shutil<span class="operator">.</span><span class="method">unpack_archive</span>(<span class="string">'backup.zip'</span>, <span class="string">'extract_dir'</span>)</div>
+        <div class="tag-group">
+          <span class="tag info">disk_usage: ディスク使用量</span>
+          <span class="tag success">make_archive: アーカイブ作成</span>
+          <span class="tag warning">unpack_archive: アーカイブ展開</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🛠️ 実践的な使用例</h2>
+        <p class="description">一般的なユースケースに対応する実践的な使用例です。エラーハンドリングやバックアップ処理を含みます。</p>
+        <div class="code"><span class="keyword">import</span> shutil
+<span class="keyword">import</span> os
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="comment"># バックアップ作成関数</span>
+<span class="keyword">def</span> <span class="method">create_backup</span>(src_dir, backup_dir=<span class="string">'backups'</span>):
+    <span class="comment"># バックアップ名に日時を含める</span>
+    timestamp = datetime<span class="operator">.</span><span class="method">now</span>()<span class="operator">.</span><span class="method">strftime</span>(<span class="string">'%Y%m%d_%H%M%S'</span>)
+    backup_name = f<span class="string">'backup_{timestamp}'</span>
+    
+    <span class="comment"># バックアップディレクトリの作成</span>
+    os<span class="operator">.</span><span class="method">makedirs</span>(backup_dir, exist_ok=<span class="keyword">True</span>)
+    
+    <span class="keyword">try</span>:
+        <span class="comment"># 圧縮アーカイブとしてバックアップを作成</span>
+        archive_path = shutil<span class="operator">.</span><span class="method">make_archive</span>(
+            os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">join</span>(backup_dir, backup_name),
+            <span class="string">'gztar'</span>,
+            src_dir
+        )
+        print(f<span class="string">"バックアップを作成しました: {archive_path}"</span>)
+        <span class="keyword">return</span> archive_path
+        
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        print(f<span class="string">"バックアップ作成中にエラーが発生: {e}"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+<span class="comment"># 古いバックアップの削除</span>
+<span class="keyword">def</span> <span class="method">cleanup_old_backups</span>(backup_dir, keep_count=<span class="number">5</span>):
+    backups = sorted([
+        os<span class="operator">.</span><span class="method">path</span><span class="operator">.</span><span class="method">join</span>(backup_dir, f)
+        <span class="keyword">for</span> f <span class="keyword">in</span> os<span class="operator">.</span><span class="method">listdir</span>(backup_dir)
+        <span class="keyword">if</span> f<span class="operator">.</span><span class="method">startswith</span>(<span class="string">'backup_'</span>)
+    ])
+    
+    <span class="comment"># 古いバックアップを削除</span>
+    <span class="keyword">while</span> len(backups) > keep_count:
+        old_backup = backups<span class="operator">.</span><span class="method">pop</span>(<span class="number">0</span>)
+        <span class="keyword">try</span>:
+            os<span class="operator">.</span><span class="method">remove</span>(old_backup)
+            print(f<span class="string">"古いバックアップを削除: {old_backup}"</span>)
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            print(f<span class="string">"バックアップ削除中にエラー: {e}"</span>)</div>
+        <div class="tag-group">
+          <span class="tag success">バックアップ作成</span>
+          <span class="tag warning">エラーハンドリング</span>
+          <span class="tag info">自動クリーンアップ</span>
+          <span class="tag danger">ファイル管理</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

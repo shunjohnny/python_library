@@ -7,6 +7,10 @@
         {
             "path": "pathlib-guide.html",
             "order": 2
+        },
+        {
+            "path": "shutil-guide.html",
+            "order": 3
         }
     ]
 }
