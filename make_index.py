@@ -4,22 +4,35 @@ import glob
 from datetime import datetime
 import shutil
 
-def generate_sidebar_html(files_info):
+def generate_sidebar_html(files_info, current_path=None):
     """
     トグル可能なサイドバーとボタンのHTMLを生成する
     """
-    sidebar_items = '\n'.join(
-        f'<a href="{info["path"]}" class="sidebar-item">{info["title"]}</a>'
-        for info in files_info
-    )
-    
+    # 現在のファイルがindex.htmlかどうかを判定
+    is_index = current_path is None or 'index.html' in current_path
+
+    # サイドバーの項目を生成
+    sidebar_items = []
+    for info in files_info:
+        if is_index:
+            # index.htmlからの場合は、contentディレクトリを含むパスを使用
+            file_path = f"content/{info['path']}"
+        else:
+            # content内のhtmlからの場合は、同じディレクトリからの相対パス
+            file_path = info['path']
+        
+        relative_path = file_path.replace('\\', '/')  # Windows対応
+        sidebar_items.append(
+            f'<a href="{relative_path}" class="sidebar-item">{info["title"]}</a>'
+        )
+
     return f'''
     <button id="sidebarToggle" class="sidebar-toggle">
         <span>📑</span>
     </button>
     <div id="sidebar" class="sidebar">
         <nav class="sidebar-content">
-            {sidebar_items}
+            {os.linesep.join(sidebar_items)}
         </nav>
     </div>
     <script>
@@ -31,10 +44,15 @@ def generate_sidebar_html(files_info):
     </script>
     '''
 
-def modify_html_content(html_content, sidebar_content):
+def modify_html_content(html_content, sidebar_content, current_path=None):
     """
-    HTMLコンテンツにトグル可能なサイドバーを追加する
+    HTMLコンテンツにトグル可能なサイドバーと戻るボタンを追加する
     """
+    # 現在のファイルの深さに基づいて相対パスを計算
+    depth = len(current_path.split(os.sep)) if current_path else 0
+    base_path = '../' * depth  # インデックスは1つ上の階層にある
+    index_path = os.path.join(base_path, 'index.html').replace('\\', '/')
+
     styles = '''
     <style>
     body {
@@ -148,8 +166,8 @@ def modify_html_content(html_content, sidebar_content):
     </style>
     '''
     
-    back_button = '''
-    <a href="/index.html" class="back-button">
+    back_button = f'''
+    <a href="{index_path}" class="back-button">
         <span>←</span> インデックス
     </a>
     '''
@@ -164,7 +182,7 @@ def modify_html_content(html_content, sidebar_content):
     else:
         soup.head.append(BeautifulSoup(f'<style>{styles}</style>', 'html.parser'))
     
-    # サイドバーとトグルボタンを追加
+    # サイドバーとボタンを追加
     container_div = soup.find('div', class_='container')
     if container_div:
         # 戻るボタンを追加
@@ -372,11 +390,11 @@ def generate_index_html(html_files_info):
         <div class="content">'''
 
     for info in html_files_info:
+        # index.htmlからのリンクなので、contentディレクトリを含める
+        link_path = f"content/{info['path']}"
         html_content += f'''
             <div class="card">
-                <h2><a href="{info['path']}" style="text-decoration: none; color: inherit;">
-                    {info['header_title']}
-                </a></h2>
+                <h2><a href="{link_path}" style="text-decoration: none; color: inherit;">{info['header_title']}</a></h2>
                 <div class="card-meta">最終更新: {info['modified']}</div>
                 <p class="description">{info['header_description']}</p>
                 <div class="tag-group">
@@ -387,8 +405,8 @@ def generate_index_html(html_files_info):
     html_content += '''
         </div>'''
     
-    # サイドバーを追加
-    html_content += generate_sidebar_html(html_files_info)
+    # サイドバーを追加（index.htmlからのパスを使用）
+    html_content += generate_sidebar_html(html_files_info, 'index.html')
     
     html_content += '''
     </div>
@@ -423,7 +441,9 @@ def main():
         if os.path.basename(file_path) != 'index.html':
             try:
                 info = extract_html_info(file_path)
-                info['path'] = os.path.join('content', os.path.relpath(file_path, content_dir))
+                rel_path = os.path.relpath(file_path, content_dir)
+                # contentディレクトリプレフィックスを除いたパスを保存
+                info['path'] = rel_path
                 files_info.append(info)
             except Exception as e:
                 print(f"Error processing {file_path}: {str(e)}")
@@ -439,7 +459,7 @@ def main():
                     content = file.read()
                 
                 # サイドバーを追加
-                modified_content = modify_html_content(content, generate_sidebar_html(files_info))
+                modified_content = modify_html_content(content, generate_sidebar_html(files_info, rel_path), rel_path)
                 
                 # 処理済みファイルを保存
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
