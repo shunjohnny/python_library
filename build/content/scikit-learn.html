@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html><head><style>
+    <style>
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        background: #f8fafc;
+        padding: 2rem;
+    }
+    .container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+    .sidebar-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-toggle.active {
+        background: #f1f5f9;
+        transform: translateX(-250px);
+    }
+    .sidebar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background: #f1f5f9;
+        border-left: 1px solid #e2e8f0;
+        padding: 1rem;
+        padding-top: 4rem;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .sidebar-item {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: #475569;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    .sidebar-item:hover {
+        background: white;
+        color: #1d4ed8;
+        transform: translateX(4px);
+    }
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        height: 2.5rem;
+        padding: 0 1rem;
+        border-radius: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        z-index: 1001;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #475569;
+        text-decoration: none;
+    }
+    .back-button:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        color: #1d4ed8;
+    }
+    .back-button span {
+        margin-right: 0.5rem;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🤖 Scikit-learn超入門ガイド</h1>
+<p>機械学習をサクッとマスターしちゃお！✨</p>
+</div>
+<div class="content">
+<div class="card">
+<h2>📊 主要モジュール＆クラス一覧</h2>
+<p class="description">よく使うやつをまとめたよ！</p>
+<table class="method-table">
+<tr>
+<th>カテゴリ</th>
+<th>クラス</th>
+<th>説明</th>
+</tr>
+<tr>
+<td class="category">前処理系</td>
+<td>StandardScaler</td>
+<td>データを標準化！平均0、分散1にしてくれる✨</td>
+</tr>
+<tr>
+<td class="category">前処理系</td>
+<td>MinMaxScaler</td>
+<td>最小値0、最大値1に変換！</td>
+</tr>
+<tr>
+<td class="category">前処理系</td>
+<td>LabelEncoder</td>
+<td>カテゴリを数値に変換！</td>
+</tr>
+<tr>
+<td class="category">前処理系</td>
+<td>OneHotEncoder</td>
+<td>カテゴリをダミー変数化！</td>
+</tr>
+<tr>
+<td class="category">前処理系</td>
+<td>Imputer</td>
+<td>欠損値を補完してくれる！</td>
+</tr>
+<tr>
+<td class="category">分類系</td>
+<td>LogisticRegression</td>
+<td>ロジスティック回帰で分類！</td>
+</tr>
+<tr>
+<td class="category">分類系</td>
+<td>RandomForestClassifier</td>
+<td>ランダムフォレストで分類！超強力！</td>
+</tr>
+<tr>
+<td class="category">分類系</td>
+<td>SVC</td>
+<td>サポートベクターマシンで分類！</td>
+</tr>
+<tr>
+<td class="category">分類系</td>
+<td>KNeighborsClassifier</td>
+<td>k近傍法で分類！</td>
+</tr>
+<tr>
+<td class="category">回帰系</td>
+<td>LinearRegression</td>
+<td>線形回帰でシンプルに予測！</td>
+</tr>
+<tr>
+<td class="category">回帰系</td>
+<td>RandomForestRegressor</td>
+<td>ランダムフォレストで回帰！</td>
+</tr>
+<tr>
+<td class="category">回帰系</td>
+<td>SVR</td>
+<td>サポートベクターマシンで回帰！</td>
+</tr>
+<tr>
+<td class="category">クラスタリング</td>
+<td>KMeans</td>
+<td>k-meansでクラスタリング！</td>
+</tr>
+<tr>
+<td class="category">クラスタリング</td>
+<td>DBSCAN</td>
+<td>密度ベースのクラスタリング！</td>
+</tr>
+<tr>
+<td class="category">次元削減</td>
+<td>PCA</td>
+<td>主成分分析で次元削減！</td>
+</tr>
+<tr>
+<td class="category">次元削減</td>
+<td>TSNE</td>
+<td>t-SNEで可視化向け次元削減！</td>
+</tr>
+<tr>
+<td class="category">評価系</td>
+<td>train_test_split</td>
+<td>データを学習用とテスト用に分割！</td>
+</tr>
+<tr>
+<td class="category">評価系</td>
+<td>cross_val_score</td>
+<td>交差検証でモデル評価！</td>
+</tr>
+<tr>
+<td class="category">評価系</td>
+<td>GridSearchCV</td>
+<td>グリッドサーチでパラメータ最適化！</td>
+</tr>
+<tr>
+<td class="category">パイプライン</td>
+<td>Pipeline</td>
+<td>前処理とモデルを一連の流れに！</td>
+</tr>
+</table>
+</div>
+<div class="card">
+<h2>🎯 データの前処理</h2>
+<p class="description">モデルに入れる前のデータ整形！</p>
+<div class="code">
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+from sklearn.impute import SimpleImputer
+
+# 数値データの標準化
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# カテゴリデータのエンコード
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+# One-hotエンコーディング
+onehot = OneHotEncoder(sparse=False)
+X_onehot = onehot.fit_transform(X_cat)
+
+# 欠損値の補完
+imputer = SimpleImputer(strategy='mean')
+X_imputed = imputer.fit_transform(X)</div>
+</div>
+<div class="card">
+<h2>🔥 モデルの学習と予測</h2>
+<p class="description">いろんなモデルで学習してみよう！</p>
+<div class="code">
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+
+# データの分割
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# ロジスティック回帰
+clf = LogisticRegression(random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+y_proba = clf.predict_proba(X_test)
+
+# ランダムフォレスト
+rf = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+rf.fit(X_train, y_train)
+
+# SVM
+svc = SVC(kernel='rbf', probability=True)
+svc.fit(X_train, y_train)</div>
+</div>
+<div class="card">
+<h2>📈 モデル評価</h2>
+<p class="description">モデルの性能をチェック！</p>
+<div class="code">
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import cross_val_score
+
+# 基本的な評価指標
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# 交差検証
+cv_scores = cross_val_score(clf, X, y, cv=5)
+print(f"CV Accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
+
+# ROC曲線とAUC
+from sklearn.metrics import roc_curve, auc
+fpr, tpr, _ = roc_curve(y_test, y_proba[:, 1])
+roc_auc = auc(fpr, tpr)</div>
+</div>
+<div class="card">
+<h2>⚡️ パラメータチューニング</h2>
+<p class="description">モデルの性能を極限まで上げよう！</p>
+<div class="code">
+from sklearn.model_selection import GridSearchCV
+
+# グリッドサーチのパラメータ設定
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+
+# グリッドサーチの実行
+grid = GridSearchCV(
+    RandomForestClassifier(random_state=42),
+    param_grid,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1
+)
+grid.fit(X_train, y_train)
+
+# 最適パラメータの確認
+print(f"Best parameters: {grid.best_params_}")
+print(f"Best score: {grid.best_score_:.3f}")
+
+# 最適モデルの取得
+best_model = grid.best_estimator_</div>
+</div>
+<div class="card">
+<h2>🎨 次元削減と可視化</h2>
+<p class="description">データを2次元に落として可視化！</p>
+<div class="code">
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
+# PCAで次元削減
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+# t-SNEで次元削減
+tsne = TSNE(n_components=2, random_state=42)
+X_tsne = tsne.fit_transform(X_scaled)
+
+# 可視化
+plt.figure(figsize=(12, 5))
+
+# PCAプロット
+plt.subplot(121)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y)
+plt.title('PCA Visualization')
+
+# t-SNEプロット
+plt.subplot(122)
+plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y)
+plt.title('t-SNE Visualization')
+
+plt.tight_layout()
+plt.show()</div>
+</div>
+<div class="card">
+<h2>🚀 パイプライン構築</h2>
+<p class="description">前処理からモデル学習まで一気に！</p>
+<div class="code">
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+
+# 数値列とカテゴリ列の前処理パイプライン
+numeric_features = ['age', 'salary']
+categorical_features = ['department', 'position']
+
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
+    ('onehot', OneHotEncoder(drop='first', sparse=False))
+])
+
+# 前処理の組み合わせ
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+# 完全なパイプライン
+clf = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', RandomForestClassifier())
+])
+
+# パイプラインの実行
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)</div>
+</div>
+<div class="card">
+<h2>💫 クラスタリング</h2>
+<p class="description">教師なし学習でグループ分け！</p>
+<div class="code">
+from sklearn.cluster import KMeans, DBSCAN
+
+# k-means クラスタリング
+kmeans = KMeans(n_clusters=5, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+
+# DBSCANクラスタリング
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+clusters_db = dbscan.fit_predict(X_scaled)
+
+# エルボー法でクラスタ数決定
+inertias = []
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(X_scaled)
+    inertias.append(kmeans.inertia_)
+
+# エルボー曲線のプロット
+plt.plot(range(1, 11), inertias, marker='o')
+plt.xlabel('Number of clusters (k)')
+plt.ylabel('Inertia')
+plt.title('Elbow Method')
+plt.show()</div>
+</div>
+</div>
+
+<a class="back-button" href="../index.html">
+<span>←</span> インデックス
+    </a>
+
+<button class="sidebar-toggle" id="sidebarToggle">
+<span>📑</span>
+</button>
+<div class="sidebar" id="sidebar">
+<nav class="sidebar-content">
+<a class="sidebar-item" href="PIL.html">🖼 PIL</a>
+<a class="sidebar-item" href="docker.html">マジやばい！WSL2でGPU使っちゃうガイド✨</a>
+<a class="sidebar-item" href="pandas.html">🐼 Pandas超完全マスターガイド</a>
+<a class="sidebar-item" href="pathlib.html">🗂 Pathlib</a>
+<a class="sidebar-item" href="scikit-learn.html">🤖 Scikit-learn超入門ガイド</a>
+<a class="sidebar-item" href="shutil.html">📦 Shutil</a>
+</nav>
+</div>
+<script>
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+            this.classList.toggle("active");
+        });
+    </script>
+</div>
+</body>
+</html>
