@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* Previous styles retained */
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: #fff0f6;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: #ff6b6b;
+    color: white;
+    font-size: 0.875rem;
+    margin: 0.3rem;
+  }
+  .method { color: #38bdf8; }
+  .string { color: #a5d6ff; }
+  .comment { color: #6b7280; }
+  .operator { color: #ff79c6; }
+  .keyword { color: #ff79c6; }
+  .number { color: #bd93f9; }
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .method-table th {
+    background: #fff0f6;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #ffe3e3;
+  }
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ffe3e3;
+    color: #475569;
+  }
+  .method-table .category {
+    color: #e64980;
+    font-weight: 500;
+  }
+  .note {
+    background: #ffe3e3;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid #ff6b6b;
+  }
+  .tip {
+    font-size: 0.9rem;
+    color: #e64980;
+    margin-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+    <div class="container">
+      <div class="header">
+        <h1>🐼 Pandas超完全マスターガイド</h1>
+        <p class="description">マジ使える！パンダちゃんの得意技まとめ♪</p>
+            <table class="method-table">
+            <tr>
+                <th>カテゴリ</th>
+                <th>メソッド</th>
+                <th>説明</th>
+            </tr>
+            <tr>
+                <td class="category">基本操作</td>
+                <td>head(), tail()</td>
+                <td>最初/最後の数行を見せてくれる！デフォで5行よ♪</td>
+            </tr>
+            <tr>
+                <td class="category">基本操作</td>
+                <td>shape</td>
+                <td>行数と列数が分かる！タプルで返してくれるよ</td>
+            </tr>
+            <tr>
+                <td class="category">基本操作</td>
+                <td>columns, index</td>
+                <td>列名とインデックスの一覧が見れる！</td>
+            </tr>
+            <tr>
+                <td class="category">データ確認</td>
+                <td>info()</td>
+                <td>データの型とか欠損値とかサクッと確認！</td>
+            </tr>
+            <tr>
+                <td class="category">データ確認</td>
+                <td>describe()</td>
+                <td>基本統計量が一気に見れちゃう神メソッド✨</td>
+            </tr>
+            <tr>
+                <td class="category">データ確認</td>
+                <td>dtypes</td>
+                <td>各列のデータ型を確認できる！</td>
+            </tr>
+            <tr>
+                <td class="category">選択系</td>
+                <td>loc[]</td>
+                <td>ラベルでアクセス！複数条件もOK！</td>
+            </tr>
+            <tr>
+                <td class="category">選択系</td>
+                <td>iloc[]</td>
+                <td>インデックス番号でアクセス！スライスもできる！</td>
+            </tr>
+            <tr>
+                <td class="category">選択系</td>
+                <td>at[], iat[]</td>
+                <td>単一要素にアクセスする高速版！</td>
+            </tr>
+            <tr>
+                <td class="category">加工系</td>
+                <td>groupby()</td>
+                <td>グループ化して集計するならこれ一択！</td>
+            </tr>
+            <tr>
+                <td class="category">加工系</td>
+                <td>merge(), join()</td>
+                <td>データフレームを結合！SQLのJOINみたいな感じ♪</td>
+            </tr>
+            <tr>
+                <td class="category">加工系</td>
+                <td>concat()</td>
+                <td>データフレームを縦・横に結合！</td>
+            </tr>
+            <tr>
+                <td class="category">変形系</td>
+                <td>pivot(), pivot_table()</td>
+                <td>ピボットテーブルでデータを変形！</td>
+            </tr>
+            <tr>
+                <td class="category">変形系</td>
+                <td>melt()</td>
+                <td>横持ちから縦持ちにデータを変換！</td>
+            </tr>
+            <tr>
+                <td class="category">変形系</td>
+                <td>stack(), unstack()</td>
+                <td>マルチインデックスの変形に使うよ！</td>
+            </tr>
+            <tr>
+                <td class="category">ソート系</td>
+                <td>sort_values()</td>
+                <td>指定した列でソート！複数列も可能！</td>
+            </tr>
+            <tr>
+                <td class="category">ソート系</td>
+                <td>sort_index()</td>
+                <td>インデックスでソート！</td>
+            </tr>
+            <tr>
+                <td class="category">文字列処理</td>
+                <td>str.contains()</td>
+                <td>文字列を含むか検索！正規表現もOK！</td>
+            </tr>
+            <tr>
+                <td class="category">文字列処理</td>
+                <td>str.replace()</td>
+                <td>文字列置換ができる！</td>
+            </tr>
+            <tr>
+                <td class="category">欠損値処理</td>
+                <td>isna(), isnull()</td>
+                <td>欠損値をチェック！</td>
+            </tr>
+            <tr>
+                <td class="category">欠損値処理</td>
+                <td>fillna(), dropna()</td>
+                <td>欠損値を埋めるor削除！</td>
+            </tr>
+            <tr>
+                <td class="category">統計系</td>
+                <td>mean(), median(), mode()</td>
+                <td>平均値、中央値、最頻値を計算！</td>
+            </tr>
+            <tr>
+                <td class="category">統計系</td>
+                <td>std(), var()</td>
+                <td>標準偏差と分散を計算！</td>
+            </tr>
+            <tr>
+                <td class="category">統計系</td>
+                <td>quantile()</td>
+                <td>分位数を計算できる！</td>
+            </tr>
+            <tr>
+                <td class="category">時系列</td>
+                <td>resample()</td>
+                <td>時系列データの周期でグループ化！</td>
+            </tr>
+            <tr>
+                <td class="category">時系列</td>
+                <td>rolling()</td>
+                <td>移動平均とかに使う！</td>
+            </tr>
+            <tr>
+                <td class="category">その他</td>
+                <td>copy()</td>
+                <td>データフレームのコピーを作成！</td>
+            </tr>
+            <tr>
+                <td class="category">その他</td>
+                <td>astype()</td>
+                <td>データ型を変換！</td>
+            </tr>
+            <tr>
+                <td class="category">その他</td>
+                <td>rename()</td>
+                <td>列名やインデックス名を変更！</td>
+            </tr>
+            </table>
+        </div>
+  
+        <div class="card">
+          <h2>📚 データの読み込み＆書き出し</h2>
+          <p class="description">いろんなフォーマットに対応してるからマジ便利！</p>
+          <div class="code">
+  # CSVファイル読み込み
+  df = pd.read_csv('kawaii_data.csv',
+      encoding='utf-8',
+      index_col='id',
+      parse_dates=['date']
+  )
+  
+  # Excelファイル
+  df = pd.read_excel('data.xlsx',
+      sheet_name='Sheet1'
+  )
+  
+  # JSON形式
+  df = pd.read_json('data.json')
+  
+  # SQLデータベース
+  from sqlalchemy import create_engine
+  engine = create_engine('sqlite:///database.db')
+  df = pd.read_sql('SELECT * FROM table', engine)
+  
+  # 書き出し
+  df.to_csv('output.csv', index=False)
+  df.to_excel('output.xlsx')
+  df.to_json('output.json')
+  df.to_sql('table_name', engine)</div>
+        </div>
+  
+        <div class="card">
+          <h2>💖 データフレーム作成</h2>
+          <p class="description">一からデータフレームを作るときはこんな感じ！</p>
+          <div class="code">
+  # 辞書からデータフレーム作成
+  df = pd.DataFrame({
+      'name': ['Alice', 'Bob', 'Charlie'],
+      'age': [25, 30, 35],
+      'city': ['Tokyo', 'Osaka', 'Fukuoka']
+  })
+  
+  # リストからデータフレーム作成
+  data = [
+      ['Alice', 25, 'Tokyo'],
+      ['Bob', 30, 'Osaka']
+  ]
+  df = pd.DataFrame(data, columns=['name', 'age', 'city'])
+  
+  # Seriesの作成
+  s = pd.Series([1, 2, 3, 4, 5], name='numbers')
+  
+  # 日付範囲の作成
+  dates = pd.date_range('2024-01-01', periods=10, freq='D')</div>
+        </div>
+  
+        <div class="card">
+          <h2>🔍 データの詳細分析</h2>
+          <p class="description">もっと深くデータを理解しちゃおう！</p>
+          <div class="code">
+  # 基本統計量（数値以外も含む）
+  df.describe(include='all')
+  
+  # 欠損値の確認
+  df.isna().sum()
+  df.isnull().sum()
+  
+  # ユニークな値の確認
+  df['category'].value_counts()
+  df['category'].nunique()
+  
+  # 相関係数
+  correlation = df.corr()
+  correlation = df.corr(method='spearman')  # スピアマン相関係数
+  
+  # クロス集計
+  pd.crosstab(df['category'], df['region'])
+  
+  # 時系列データの集計
+  df.resample('M')['sales'].sum()  # 月次集計
+  df.rolling(window=7)['sales'].mean()  # 移動平均</div>
+        </div>
+  
+        <div class="card">
+          <h2>✨ データの加工・変換</h2>
+          <p class="description">データを整形して分析しやすくしよう！</p>
+          <div class="code">
+  # 列の追加・変更
+  df['tax'] = df['price'] * 0.1
+  df['full_name'] = df['first_name'] + ' ' + df['last_name']
+  
+  # データ型変換
+  df['price'] = pd.to_numeric(df['price'], errors='coerce')
+  df['date'] = pd.to_datetime(df['date'])
+  
+  # カテゴリ型への変換
+  df['category'] = df['category'].astype('category')
+  
+  # 条件分岐
+  df['size'] = np.where(df['value'] > 100, 'Large', 'Small')
+  
+  # apply関数での変換
+  df['name'] = df['name'].apply(str.upper)
+  df['description'] = df['description'].apply(lambda x: x.strip())
+  
+  # 複数列の一括変換
+  df = df.convert_dtypes()  # 最適なデータ型に自動変換</div>
+        </div>
+  
+        <div class="card">
+          <h2>💝 データの結合＆変形</h2>
+          <p class="description">複数のデータをいい感じにくっつけちゃお！</p>
+          <div class="code">
+  # データフレームの結合
+  merged = pd.merge(
+      df1, df2,
+      on='id',           # 結合キー
+      how='left'         # 結合方法（left, right, inner, outer）
+  )
+  
+  # 縦方向の結合
+  combined = pd.concat([df1, df2], axis=0)
+  
+  # 横方向の結合
+  combined = pd.concat([df1, df2], axis=1)
+  
+  # ピボットテーブル
+  pivot = df.pivot_table(
+      values='sales',
+      index=['category', 'region'],
+      columns='year',
+      aggfunc=['sum', 'mean'],
+      fill_value=0
+  )
+  
+  # wide形式 ←→ long形式の変換
+  long_df = df.melt(
+      id_vars=['date', 'category'],
+      value_vars=['sales', 'profit'],
+      var_name='metric',
+      value_name='value'
+  )</div>
+        </div>
+  
+        <div class="card">
+          <h2>🧹 データクリーニング</h2>
+          <p class="description">汚いデータもキレイにしていこう！</p>
+          <div class="code">
+  # 欠損値の処理
+  df.fillna({
+      'sales': 0,
+      'category': 'Unknown'
+  }, inplace=True)
+  
+  df.dropna(subset=['important_column'])  # 欠損がある行を削除
+  
+  # 重複データの削除
+  df.drop_duplicates(subset=['id'], keep='first')
+  
+  # 外れ値の処理
+  Q1 = df['sales'].quantile(0.25)
+  Q3 = df['sales'].quantile(0.75)
+  IQR = Q3 - Q1
+  filter = (df['sales'] >= Q1 - 1.5 * IQR) & (df['sales'] <= Q3 + 1.5 * IQR)
+  df_clean = df[filter]
+  
+  # 文字列の正規化
+  df['name'] = df['name'].str.strip().str.lower()
+  
+  # カテゴリの置換
+  df['category'] = df['category'].replace({
+      'A': 'Category A',
+      'B': 'Category B'
+  })
+  
+  # インデックスのリセット
+  df.reset_index(drop=True, inplace=True)</div>
+        </div>
+  
+        <div class="card">
+          <h2>📊 データの可視化</h2>
+          <p class="description">グラフで可視化して分析の幅を広げよう！</p>
+          <div class="code">
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  
+  # 基本的なプロット
+  df.plot(kind='line', x='date', y='sales')
+  df.plot(kind='bar', x='category', y='sales')
+  df.plot(kind='scatter', x='price', y='sales')
+  df.plot(kind='box')
+  df.plot(kind='hist')
+  
+  # seabornでの可視化
+  sns.set_style('whitegrid')
+  
+  # 複数グラフの描画
+  fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+  
+  # 時系列プロット
+  sns.lineplot(data=df, x='date', y='sales', hue='category', ax=axes[0, 0])
+  
+  # 箱ひげ図
+  sns.boxplot(data=df, x='category', y='sales', ax=axes[0, 1])
+  
+  # ヒートマップ
+  sns.heatmap(correlation, annot=True, ax=axes[1, 0])
+  
+  # 分布図
+  sns.kdeplot(data=df, x='sales', hue='category', ax=axes[1, 1])
+  
+  # グラフの保存
+  plt.savefig('analysis.png', dpi=300, bbox_inches='tight')</div>
+        </div>
+  
+        <div class="card">
+          <h2>🎯 パフォーマンス最適化</h2>
+          <p class="description">大きなデータを扱うときのコツ！</p>
+          <div class="code">
+  # データ型の最適化
+  df['category'] = df['category'].astype('category')  # カテゴリ型に変換
+  df['small_int'] = df['small_int'].astype('int8')   # 整数型の最適化
+  
+  # チャンク読み込み
+  chunks = pd.read_csv('huge_file.csv', chunksize=10000)
+  for chunk in chunks:
+      process_chunk(chunk)
+  
+  # 並列処理
+  df.groupby('category').parallel_apply(heavy_function)
+  
+  # メモリ使用量の確認
+  df.memory_usage(deep=True)
+  
+  # 不要な列の削除
+  df.drop(columns=['unnecessary_col'], inplace=True)
+  
+  # インデックスの最適化
+  df.sort_index()  # インデックスでソート
+  df.index = pd.Index(df.index)  # インデックスの効率化</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

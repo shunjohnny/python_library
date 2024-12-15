@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+    line-height: 1.6;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  h2, h3, h4 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    color: #ff6b6b;
+  }
+  ul {
+    list-style: none;
+    padding-left: 1.5rem;
+  }
+  ul li::before {
+    content: "💅";
+    margin-right: 0.5rem;
+  }
+  code {
+    background: #fff0f3;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    color: #ff6b6b;
+  }
+  pre {
+    background: #fff0f3;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow: auto;
+    font-size: 0.9rem;
+  }
+  .warning {
+    background: #fff0f3;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid #ff6b6b;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ffe3e3;
+    vertical-align: top;
+  }
+  th {
+    background: #fff0f3;
+    font-weight: 600;
+    color: #ff6b6b;
+  }
+  .stage {
+    font-weight: bold;
+    color: #ff6b6b;
+  }
+  .emoji {
+    font-size: 1.2em;
+    margin-right: 0.3em;
+  }
+  .highlight {
+    background: linear-gradient(transparent 60%, #ffe3e3 60%);
+    font-weight: bold;
+  }
+</style>
+<title>マジやばい！WSL2でGPU使っちゃうガイド✨</title>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>✨ マジやばい！WSL2でGPU使っちゃう超簡単ガイド！</h1>
+      <p>Docker Desktop？そんなの要らないの！WSL2で直接Dockerコンテナ立ち上げちゃおう！GPUもバリバリ使えちゃうよ〜！💕</p>
+    </header>
+    
+    <main class="content">
+      <section>
+        <h2>🌈 超簡単！やることまとめ</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ステージ</th>
+              <th>やることリスト</th>
+              <th>使うコマンドとか</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="stage">Windows準備💻</td>
+              <td>
+                <ul>
+                  <li>Windows 10かWindows 11を使うよ</li>
+                  <li>BIOSで仮想化をONにしちゃお</li>
+                  <li>WSL2入れて更新もしちゃう</li>
+                  <li>NVIDIAドライバーも最新にしとこ！</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li><code>winver</code>でWindows確認！</li>
+                  <li><code>wsl --install</code>と<code>wsl --update</code>でOK！</li>
+                  <li>GeForce Experienceでポチッとアプデ！</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td class="stage">WSL2でセットアップ🎀</td>
+              <td>
+                <ul>
+                  <li>DockerをWSL2に直接インストール！</li>
+                  <li>NVIDIAのツールも入れちゃう！</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li><code>sudo apt install docker.io</code>でインストール！</li>
+                  <li>NVIDIA Container Toolkitもぽちぽちインストール！</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td class="stage">Docker起動✨</td>
+              <td>
+                <ul>
+                  <li>GPUが使えるイメージを選ぶ！</li>
+                  <li><code>--gpus all</code>つけて起動！</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li><code>docker run --gpus all --rm nvidia/cuda nvidia-smi</code></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>🌟 詳しい手順を見ていくよ！</h2>
+
+        <h3>1️⃣ まずはWindowsの準備から！</h3>
+        <h4>Windowsのチェックリスト✨</h4>
+        <ul>
+          <li>Windows 10（21H2以降）かWindows 11を使ってね！</li>
+          <li>BIOSで仮想化をONにしとかないとダメ！</li>
+          <li><code>winver</code>でバージョン確認して、タスクマネージャーでVirtualizationもチェック！</li>
+        </ul>
+
+        <h4>WSL2をインストール＆更新💫</h4>
+        <ul>
+          <li>PowerShellで<code>wsl --install</code>っていうコマンドを打って！</li>
+          <li><code>wsl --update</code>で最新版にアプデしとこう！</li>
+          <li>Ubuntu 22.04 LTSとかをインストールしちゃお！</li>
+        </ul>
+
+        <h4>NVIDIAドライバーも忘れずに！🎮</h4>
+        <ul>
+          <li>GeForce Experienceか公式サイトから最新ドライバーを入れちゃお！</li>
+          <li><code>nvidia-smi</code>でGPUが認識されてるか確認！</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>2️⃣ WSL2でDockerとNVIDIAのセットアップ！</h3>
+        <div class="warning">
+          <p>💁‍♀️ ここからはWSL2の中でコマンド打っていくよ！</p>
+        </div>
+
+        <h4>DockerをWSL2にインストール！🐳</h4>
+        <ul>
+          <li><code>sudo apt update</code>してから<code>sudo apt install docker.io</code>でDocker導入！</li>
+          <li><code>sudo usermod -aG docker $USER</code>でdockerグループに入れちゃお！</li>
+          <li>一回ログインし直してから<code>docker ps</code>で動作確認！</li>
+        </ul>
+
+        <h4>NVIDIAのツールもインストール！🎮</h4>
+        <ul>
+          <li>NVIDIA Container Toolkitを公式の手順通りにインストール！</li>
+          <li><code>sudo nvidia-ctk runtime configure --runtime=docker</code>で設定！</li>
+          <li><code>sudo service docker restart</code>でDocker再起動！</li>
+          <li><code>nvidia-smi</code>でGPUが見えるか確認！</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>3️⃣ いよいよDockerでGPUを使っちゃおう！</h3>
+        <ul>
+          <li>GPUが使えるイメージを選んでね！（<code>nvidia/cuda:11.8.0-base-ubuntu22.04</code>とか！）</li>
+          <li><code>--gpus all</code>ってオプションをつけて起動！</li>
+        </ul>
+        
+        <pre><code>docker run --gpus all --rm nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi</code></pre>
+        
+        <ul>
+          <li>このコマンドでGPUの情報が表示されたら成功！🎉</li>
+        </ul>
+      </section>
+
+      <aside class="warning">
+        <strong>💅 ポイントまとめ：</strong>
+        <ul>
+          <li><span class="highlight">Windows側</span>：バージョンOK？仮想化ON？WSL2入ってる？NVIDIAドライバー最新？</li>
+          <li><span class="highlight">WSL2側</span>：DockerとNVIDIA Container Toolkit入れるの忘れずに！</li>
+          <li><span class="highlight">Docker側</span>：<code>--gpus all</code>つけ忘れないでね！</li>
+        </ul>
+      </aside>
+
+    </main>
+  </div>
+</body>
+</html>
