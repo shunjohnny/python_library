@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        /* Previous styles retained */
+        body {
+          font-family: system-ui, -apple-system, sans-serif;
+          max-width: 900px;
+          margin: 0 auto;
+          background: #f8fafc;
+          padding: 2rem;
+        }
+        .container {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+        }
+        .header {
+          background: linear-gradient(135deg, #ff6b6b, #ff8787);
+          color: white;
+          padding: 2rem;
+        }
+        .content {
+          padding: 2rem;
+        }
+        .card {
+          background: #fff0f6;
+          border-radius: 0.5rem;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .code {
+          background: #1e293b;
+          color: #e2e8f0;
+          padding: 1.5rem;
+          border-radius: 0.5rem;
+          font-family: monospace;
+          margin: 0.5rem 0;
+          overflow-x: auto;
+          line-height: 1.5;
+          white-space: pre;
+          tab-size: 4;
+        }
+        .tag {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 1rem;
+          background: #ff6b6b;
+          color: white;
+          font-size: 0.875rem;
+          margin: 0.3rem;
+        }
+        .method { color: #38bdf8; }
+        .string { color: #a5d6ff; }
+        .comment { color: #6b7280; }
+        .operator { color: #ff79c6; }
+        .keyword { color: #ff79c6; }
+        .number { color: #bd93f9; }
+        .method-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+          background: white;
+          border-radius: 0.5rem;
+          overflow: hidden;
+        }
+        .method-table th {
+          background: #fff0f6;
+          padding: 0.75rem;
+          text-align: left;
+          color: #1e293b;
+          font-weight: 600;
+          border-bottom: 2px solid #ffe3e3;
+        }
+        .method-table td {
+          padding: 0.75rem;
+          border-bottom: 1px solid #ffe3e3;
+          color: #475569;
+        }
+        .method-table .category {
+          color: #e64980;
+          font-weight: 500;
+        }
+        .note {
+          background: #ffe3e3;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          margin: 1rem 0;
+          border-left: 4px solid #ff6b6b;
+        }
+        .tip {
+          font-size: 0.9rem;
+          color: #e64980;
+          margin-top: 0.5rem;
+        }
+      </style>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔢 NumPy超入門ガイド</h1>
+      <p>配列操作の基本から応用まで！</p>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <h2>📊 主要メソッド一覧</h2>
+        <table class="method-table">
+          <tr>
+            <th>カテゴリ</th>
+            <th>メソッド</th>
+            <th>説明</th>
+          </tr>
+          <tr>
+            <td class="category">配列作成</td>
+            <td>array()</td>
+            <td>リストから配列を作成！基本中の基本！</td>
+          </tr>
+          <tr>
+            <td class="category">配列作成</td>
+            <td>zeros(), ones()</td>
+            <td>0や1で埋めた配列を作成！</td>
+          </tr>
+          <tr>
+            <td class="category">配列作成</td>
+            <td>arange(), linspace()</td>
+            <td>等間隔の数値配列を作成！</td>
+          </tr>
+          <tr>
+            <td class="category">配列作成</td>
+            <td>eye(), identity()</td>
+            <td>単位行列を作成！</td>
+          </tr>
+          <tr>
+            <td class="category">配列作成</td>
+            <td>random.rand(), random.randn()</td>
+            <td>ランダムな配列を生成！</td>
+          </tr>
+          <tr>
+            <td class="category">形状操作</td>
+            <td>reshape()</td>
+            <td>配列の形状を変更！</td>
+          </tr>
+          <tr>
+            <td class="category">形状操作</td>
+            <td>flatten(), ravel()</td>
+            <td>多次元配列を1次元に平坦化！</td>
+          </tr>
+          <tr>
+            <td class="category">形状操作</td>
+            <td>transpose(), T</td>
+            <td>転置行列を取得！</td>
+          </tr>
+          <tr>
+            <td class="category">演算系</td>
+            <td>add(), subtract()</td>
+            <td>要素ごとの加算・減算！</td>
+          </tr>
+          <tr>
+            <td class="category">演算系</td>
+            <td>multiply(), divide()</td>
+            <td>要素ごとの乗算・除算！</td>
+          </tr>
+          <tr>
+            <td class="category">演算系</td>
+            <td>dot()</td>
+            <td>行列積を計算！</td>
+          </tr>
+          <tr>
+            <td class="category">演算系</td>
+            <td>sum(), mean()</td>
+            <td>合計と平均を計算！</td>
+          </tr>
+          <tr>
+            <td class="category">演算系</td>
+            <td>min(), max()</td>
+            <td>最小値・最大値を取得！</td>
+          </tr>
+          <tr>
+            <td class="category">統計系</td>
+            <td>std(), var()</td>
+            <td>標準偏差・分散を計算！</td>
+          </tr>
+          <tr>
+            <td class="category">統計系</td>
+            <td>median(), percentile()</td>
+            <td>中央値・パーセンタイルを計算！</td>
+          </tr>
+          <tr>
+            <td class="category">比較系</td>
+            <td>where()</td>
+            <td>条件に基づいて値を選択！</td>
+          </tr>
+          <tr>
+            <td class="category">比較系</td>
+            <td>any(), all()</td>
+            <td>条件を満たす要素の存在確認！</td>
+          </tr>
+          <tr>
+            <td class="category">ソート系</td>
+            <td>sort()</td>
+            <td>配列をソート！</td>
+          </tr>
+          <tr>
+            <td class="category">ソート系</td>
+            <td>argsort()</td>
+            <td>ソートのインデックスを取得！</td>
+          </tr>
+          <tr>
+            <td class="category">検索系</td>
+            <td>argmin(), argmax()</td>
+            <td>最小値・最大値のインデックスを取得！</td>
+          </tr>
+          <tr>
+            <td class="category">検索系</td>
+            <td>searchsorted()</td>
+            <td>ソート済み配列での挿入位置を検索！</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>🎲 配列の作成</h2>
+        <div class="code">
+import numpy as np
+
+# 基本的な配列作成
+arr = np.array([1, 2, 3, 4, 5])
+zeros = np.zeros((3, 3))
+ones = np.ones((2, 4))
+empty = np.empty((2, 3))
+
+# 等間隔の数値配列
+range_arr = np.arange(0, 10, 2)  # 0から10まで2刻み
+space_arr = np.linspace(0, 1, 5)  # 0から1まで5等分
+
+# 単位行列
+eye = np.eye(3)
+identity = np.identity(3)
+
+# ランダム配列
+rand = np.random.rand(3, 3)  # 一様分布
+randn = np.random.randn(3, 3)  # 正規分布
+randint = np.random.randint(0, 10, (3, 3))  # 整数の乱数</div>
+      </div>
+
+      <div class="card">
+        <h2>🔄 形状操作と結合</h2>
+        <div class="code">
+# 形状の変更
+arr = np.array([1, 2, 3, 4, 5, 6])
+reshaped = arr.reshape(2, 3)
+flattened = reshaped.flatten()
+
+# 転置
+transposed = reshaped.T
+
+# 配列の結合
+arr1 = np.array([1, 2, 3])
+arr2 = np.array([4, 5, 6])
+concatenated = np.concatenate([arr1, arr2])
+stacked_v = np.vstack([arr1, arr2])
+stacked_h = np.hstack([arr1, arr2])
+
+# 次元の追加
+expanded = np.expand_dims(arr1, axis=0)
+squeezed = np.squeeze(expanded)  # 次元の削除</div>
+      </div>
+
+      <div class="card">
+        <h2>✨ 演算と集計</h2>
+        <div class="code">
+# 基本演算
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+added = np.add(a, b)  # または a + b
+subtracted = np.subtract(a, b)  # または a - b
+multiplied = np.multiply(a, b)  # または a * b
+divided = np.divide(a, b)  # または a / b
+
+# 行列演算
+matrix_a = np.array([[1, 2], [3, 4]])
+matrix_b = np.array([[5, 6], [7, 8]])
+dot_product = np.dot(matrix_a, matrix_b)
+cross_product = np.cross(a, b)
+
+# 集計
+total = np.sum(a)
+mean_val = np.mean(a)
+max_val = np.max(a)
+min_val = np.min(a)</div>
+      </div>
+
+      <div class="card">
+        <h2>📊 統計関数</h2>
+        <div class="code">
+# 基本統計量
+arr = np.array([1, 2, 3, 4, 5])
+std_dev = np.std(arr)  # 標準偏差
+variance = np.var(arr)  # 分散
+median_val = np.median(arr)  # 中央値
+
+# パーセンタイル
+percentile_75 = np.percentile(arr, 75)
+
+# 相関係数
+corr = np.corrcoef(arr1, arr2)
+
+# ヒストグラム
+hist, bins = np.histogram(arr, bins=5)</div>
+      </div>
+
+      <div class="card">
+        <h2>🔍 インデックス操作</h2>
+        <div class="code">
+# 条件に基づく選択
+arr = np.array([1, 2, 3, 4, 5])
+mask = arr > 3
+selected = arr[mask]
+
+# インデックス取得
+indices = np.where(arr > 3)
+
+# ファンシーインデックス
+fancy_idx = np.array([0, 2, 4])
+selected = arr[fancy_idx]
+
+# ブールインデックス
+mask = arr % 2 == 0
+even_numbers = arr[mask]</div>
+      </div>
+
+      <div class="card">
+        <h2>🔀 ソートと検索</h2>
+        <div class="code">
+# ソート
+arr = np.array([3, 1, 4, 1, 5, 9, 2])
+sorted_arr = np.sort(arr)
+sorted_indices = np.argsort(arr)
+
+# 一意の値
+unique_vals = np.unique(arr)
+
+# 検索
+min_idx = np.argmin(arr)
+max_idx = np.argmax(arr)
+
+# ソート済み配列での検索
+sorted_arr = np.sort(arr)
+insert_pos = np.searchsorted(sorted_arr, 6)</div>
+      </div>
+
+      <div class="card">
+        <h2>🔢 線形代数</h2>
+        <div class="code">
+from numpy.linalg import inv, det, eig, svd
+
+# 逆行列
+matrix = np.array([[1, 2], [3, 4]])
+inverse = inv(matrix)
+
+# 行列式
+determinant = det(matrix)
+
+# 固有値と固有ベクトル
+eigenvals, eigenvecs = eig(matrix)
+
+# 特異値分解
+U, s, Vh = svd(matrix)
+
+# ノルム計算
+norm = np.linalg.norm(arr)</div>
+      </div>
+
+      <div class="card">
+        <h2>🎭 ブロードキャスト</h2>
+        <div class="code">
+# スカラーとの演算
+arr = np.array([1, 2, 3, 4])
+scaled = arr * 2
+
+# 異なる形状の配列との演算
+a = np.array([[1, 2, 3],
+              [4, 5, 6]])
+b = np.array([10, 20, 30])
+result = a + b  # bが自動的にブロードキャスト
+
+# 条件に基づく置換
+arr = np.array([1, 2, 3, 4, 5])
+arr[arr > 3] = 10  # 3より大きい要素を10に置換</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
