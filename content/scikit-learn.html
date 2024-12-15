@@ -1,5 +1,99 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        /* Previous styles retained */
+        body {
+          font-family: system-ui, -apple-system, sans-serif;
+          max-width: 900px;
+          margin: 0 auto;
+          background: #f8fafc;
+          padding: 2rem;
+        }
+        .container {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+        }
+        .header {
+          background: linear-gradient(135deg, #ff6b6b, #ff8787);
+          color: white;
+          padding: 2rem;
+        }
+        .content {
+          padding: 2rem;
+        }
+        .card {
+          background: #fff0f6;
+          border-radius: 0.5rem;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .code {
+          background: #1e293b;
+          color: #e2e8f0;
+          padding: 1.5rem;
+          border-radius: 0.5rem;
+          font-family: monospace;
+          margin: 0.5rem 0;
+          overflow-x: auto;
+          line-height: 1.5;
+          white-space: pre;
+          tab-size: 4;
+        }
+        .tag {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 1rem;
+          background: #ff6b6b;
+          color: white;
+          font-size: 0.875rem;
+          margin: 0.3rem;
+        }
+        .method { color: #38bdf8; }
+        .string { color: #a5d6ff; }
+        .comment { color: #6b7280; }
+        .operator { color: #ff79c6; }
+        .keyword { color: #ff79c6; }
+        .number { color: #bd93f9; }
+        .method-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+          background: white;
+          border-radius: 0.5rem;
+          overflow: hidden;
+        }
+        .method-table th {
+          background: #fff0f6;
+          padding: 0.75rem;
+          text-align: left;
+          color: #1e293b;
+          font-weight: 600;
+          border-bottom: 2px solid #ffe3e3;
+        }
+        .method-table td {
+          padding: 0.75rem;
+          border-bottom: 1px solid #ffe3e3;
+          color: #475569;
+        }
+        .method-table .category {
+          color: #e64980;
+          font-weight: 500;
+        }
+        .note {
+          background: #ffe3e3;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          margin: 1rem 0;
+          border-left: 4px solid #ff6b6b;
+        }
+        .tip {
+          font-size: 0.9rem;
+          color: #e64980;
+          margin-top: 0.5rem;
+        }
+      </style>
 <body>
   <div class="container">
     <div class="header">
