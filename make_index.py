@@ -417,6 +417,7 @@ def generate_index_html(html_files_info):
 
 def main():
     content_dir = 'content'
+    styles_dir = 'styles'
     build_dir = 'build'
     
     # buildディレクトリをクリーンアップ
@@ -432,6 +433,12 @@ def main():
     if os.path.exists(content_dir):
         shutil.copytree(content_dir, os.path.join(build_dir, 'content'), dirs_exist_ok=True)
     
+    # stylesフォルダをコピー
+    if os.path.exists(styles_dir):
+        shutil.copytree(styles_dir, os.path.join(build_dir, 'styles'), dirs_exist_ok=True)
+    else:
+        print(f"Warning: '{styles_dir}' directory does not exist. Skipping styles folder copy.")
+
     # HTMLファイルを処理
     html_files = glob.glob(os.path.join(content_dir, '**/*.html'), recursive=True)
     files_info = []
@@ -448,6 +455,9 @@ def main():
             except Exception as e:
                 print(f"Error processing {file_path}: {str(e)}")
     
+    # ファイル情報を名前順にソート（ファイルパスをキーとしてソート）
+    files_info = sorted(files_info, key=lambda x: x['path'])
+
     # 各HTMLファイルを処理
     for src_path in html_files:
         if os.path.basename(src_path) != 'index.html':
