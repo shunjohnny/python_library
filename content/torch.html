@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 2rem;
+  }
+  .container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 2rem;
+  }
+  .content {
+    padding: 2rem;
+  }
+  .card {
+    background: white;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  .card-header {
+    background: #f1f5f9;
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .card-header h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+  }
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  .method-table th {
+    background: #f8fafc;
+    padding: 0.75rem;
+    text-align: left;
+    color: #1e293b;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .method-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+  }
+  .method-table tr:last-child td {
+    border-bottom: none;
+  }
+  .code {
+    font-family: monospace;
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+  .description {
+    color: #475569;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔥 PyTorch</h1>
+      <p>深層学習フレームワークの基本メソッド集</p>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <div class="card-header">
+          <h2>テンソル生成</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>torch.tensor()</code></td>
+            <td>データからテンソルを作成</td>
+            <td><code>torch.tensor([1, 2, 3])</code></td>
+          </tr>
+          <tr>
+            <td><code>torch.zeros()</code></td>
+            <td>0で初期化されたテンソルを作成</td>
+            <td><code>torch.zeros(3, 2)</code></td>
+          </tr>
+          <tr>
+            <td><code>torch.ones()</code></td>
+            <td>1で初期化されたテンソルを作成</td>
+            <td><code>torch.ones(3, 2)</code></td>
+          </tr>
+          <tr>
+            <td><code>torch.rand()</code></td>
+            <td>0-1の一様分布からランダム生成</td>
+            <td><code>torch.rand(2, 3)</code></td>
+          </tr>
+          <tr>
+            <td><code>torch.randn()</code></td>
+            <td>標準正規分布からランダム生成</td>
+            <td><code>torch.randn(2, 3)</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>形状操作</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>view()</code></td>
+            <td>テンソルの形状を変更</td>
+            <td><code>x.view(2, -1)</code></td>
+          </tr>
+          <tr>
+            <td><code>reshape()</code></td>
+            <td>形状を変更(非連続メモリ対応)</td>
+            <td><code>x.reshape(3, 4)</code></td>
+          </tr>
+          <tr>
+            <td><code>transpose()</code></td>
+            <td>指定した2つの次元を入れ替え</td>
+            <td><code>x.transpose(0, 1)</code></td>
+          </tr>
+          <tr>
+            <td><code>permute()</code></td>
+            <td>任意の次元順序に並べ替え</td>
+            <td><code>x.permute(2, 0, 1)</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>演算処理</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>add()</code></td>
+            <td>テンソルの加算</td>
+            <td><code>x.add(y)</code></td>
+          </tr>
+          <tr>
+            <td><code>mul()</code></td>
+            <td>要素ごとの乗算</td>
+            <td><code>x.mul(y)</code></td>
+          </tr>
+          <tr>
+            <td><code>matmul()</code></td>
+            <td>行列積を計算</td>
+            <td><code>torch.matmul(x, y)</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>統計処理</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>mean()</code></td>
+            <td>平均値を計算</td>
+            <td><code>x.mean(dim=0)</code></td>
+          </tr>
+          <tr>
+            <td><code>std()</code></td>
+            <td>標準偏差を計算</td>
+            <td><code>x.std(dim=0)</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>活性化関数</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>relu()</code></td>
+            <td>ReLU関数を適用</td>
+            <td><code>torch.relu(x)</code></td>
+          </tr>
+          <tr>
+            <td><code>sigmoid()</code></td>
+            <td>シグモイド関数を適用</td>
+            <td><code>torch.sigmoid(x)</code></td>
+          </tr>
+          <tr>
+            <td><code>softmax()</code></td>
+            <td>ソフトマックス関数を適用</td>
+            <td><code>torch.softmax(x, dim=1)</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>デバイス操作</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>cuda()</code></td>
+            <td>テンソルをGPUに転送</td>
+            <td><code>x.cuda()</code></td>
+          </tr>
+          <tr>
+            <td><code>cpu()</code></td>
+            <td>テンソルをCPUに転送</td>
+            <td><code>x.cpu()</code></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>勾配計算</h2>
+        </div>
+        <table class="method-table">
+          <tr>
+            <th>メソッド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+          <tr>
+            <td><code>backward()</code></td>
+            <td>逆伝播を実行</td>
+            <td><code>loss.backward()</code></td>
+          </tr>
+          <tr>
+            <td><code>detach()</code></td>
+            <td>計算グラフから切り離し</td>
+            <td><code>x.detach()</code></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
